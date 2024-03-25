@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.presentation.theme.account_screen.AccountScreen
-import com.example.newstoday.presentation.theme.bottom_nav_bar.BottomNavigationBar
+import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen

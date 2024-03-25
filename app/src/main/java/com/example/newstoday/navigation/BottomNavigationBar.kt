@@ -1,4 +1,4 @@
-package com.example.newstoday.presentation.theme.bottom_nav_bar
+package com.example.newstoday.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -12,7 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import com.example.newstoday.navigation.NavigationItem
+import com.example.newstoday.presentation.theme.ui.GreyLight
+import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -24,17 +25,17 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationItem.Account
     )
     NavigationBar(
-        containerColor = Color(255, 255, 255),
+        containerColor = Color.White,
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
                 selected = selectedItem == index,
                 colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = Color(172, 175, 195),
-                    unselectedTextColor = Color(172, 175, 195),
-                    selectedIconColor = Color(71, 90, 215),
-                    selectedTextColor = Color(71, 90, 215)
+                    unselectedIconColor = GreyLight,
+                    unselectedTextColor = GreyLight,
+                    selectedIconColor = PurplePrimary,
+                    selectedTextColor = PurplePrimary
                 ),
                 onClick = {
                     selectedItem = index
