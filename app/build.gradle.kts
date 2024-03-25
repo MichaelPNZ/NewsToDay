@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlinSerialization)
+    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -52,14 +52,31 @@ android {
 }
 
 dependencies {
+    // viewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //Retrofit
     implementation(libs.retrofit)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.annotation)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
-    implementation(libs.retrofit.adapters.result)
-
+    //Retrofit-logging
+    implementation (libs.logging.interceptor)
+    //Gson
+    implementation(libs.converter.gson)
+    //Coil
+    implementation(libs.coil.compose)
+    //Hilt
+    implementation (libs.hilt.android)
+    ksp (libs.hilt.compiler)
+    ksp (libs.androidx.hilt.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
+    // For collectAsStateWithLifecycle
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    // For immutableList
+    implementation(libs.kotlinx.collections.immutable)
+    // For navigation
+    implementation (libs.androidx.navigation.compose)
+    // For room
     ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.core.ktx)
