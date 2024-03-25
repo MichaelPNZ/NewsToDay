@@ -1,4 +1,4 @@
-package com.example.newstoday.ui.theme
+package com.example.newstoday.presentation.theme.ui
 
 import android.app.Activity
 import android.os.Build
