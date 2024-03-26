@@ -2,63 +2,64 @@
 
 package com.example.newstoday.presentation.theme.home_screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.OutlinedTextFieldDefaults.ContainerBox
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.newstoday.R
+import com.example.newstoday.domain.model.Article
+import com.example.newstoday.presentation.theme.test.TestState
+import com.example.newstoday.presentation.theme.test.TestViewModel
 import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
-import com.example.newstoday.presentation.theme.ui.PurplePrimary
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: TestViewModel = hiltViewModel()) {
+    val screenState = viewModel.screenState.collectAsStateWithLifecycle(TestState.Initial)
     val searchText = remember { mutableStateOf("") }
     var buttonColor by remember { mutableStateOf(GreyLighter) }
 
@@ -106,11 +107,10 @@ fun HomeScreen() {
                 )
         )
         val categoryList = listOf("Random", "Apple", "Tesla", "Business", "TechCrunch", "News")
-        LazyRow(modifier = Modifier.padding(top = 20.dp)) {
+        LazyRow(modifier = Modifier.padding(top = 20.dp, start = 15.dp)) {
             items(categoryList) { category ->
                 Button(
                     onClick = {
-                        buttonColor = PurplePrimary
                     }, colors = ButtonDefaults.buttonColors(buttonColor),
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
@@ -125,26 +125,30 @@ fun HomeScreen() {
 
             }
         }
-        ScrollNews()
+        ScreenContents(screenState = screenState, viewModel = viewModel)
     }
 }
 
 
 @Composable
-fun ScrollNews() {
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .padding(start = 20.dp)) {
+fun ScrollNews(
+    news: ImmutableList<Article>?,
+    viewModel: TestViewModel,
+) {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
         LazyRow(
-            modifier = Modifier
-                .padding(top = 30.dp)
-                .fillMaxWidth()
-                .height(256.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            items(5) {
-                AsyncImage(
-                    "", "",
-                )
+            news?.let {
+                items(items = news) {
+                    NewsItems(
+                        article = it,
+                        viewModel = viewModel
+                    )
+                }
             }
 
         }
@@ -153,7 +157,8 @@ fun ScrollNews() {
             Text(
                 "Recommended for you",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 20.dp)
             )
             Text(
                 "See All",
@@ -166,8 +171,92 @@ fun ScrollNews() {
 
 }
 
-@Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen()
+fun NewsItems(
+    article: Article,
+    viewModel: TestViewModel,
+) {
+    Spacer(modifier = Modifier.padding(start = 20.dp))
+    Card(
+        modifier = Modifier
+            .height(256.dp)
+            .width(256.dp),
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .background(Color.White, RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.Crop,
+                imageLoader = viewModel.imageLoader,
+                model = article.urlToImage,
+                contentDescription = null
+            )
+            IconButton(onClick = {
+
+            }, modifier = Modifier.align(Alignment.TopEnd)) {
+                Icon(
+                    painter = painterResource(R.drawable.favorite_icon), "favorites",
+                    tint = Color.White
+                )
+
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .align(Alignment.BottomStart),
+            ) {
+                Text(
+                    text = article.author,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+                Text(
+                    text = article.title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = article.source.name,
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ScreenContents(
+    screenState: State<TestState>,
+    viewModel: TestViewModel,
+) {
+    when (val currentState = screenState.value) {
+        is TestState.Initial -> {}
+        is TestState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is TestState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Error")
+            }
+        }
+
+        is TestState.Articles -> {
+            Box(modifier = Modifier.padding(top = 20.dp), contentAlignment = Alignment.Center) {
+                ScrollNews(
+                    news = currentState.articles?.filter { it.urlToImage.isNotEmpty() }
+                        ?.toImmutableList(),
+                    viewModel = viewModel)
+            }
+        }
+    }
 }
