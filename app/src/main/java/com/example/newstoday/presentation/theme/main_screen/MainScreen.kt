@@ -16,6 +16,8 @@ import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
+import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
+import com.example.newstoday.presentation.theme.personal_account_screen.PersonalAccountScreen
 import com.example.newstoday.presentation.theme.test.TestScreen
 import com.example.newstoday.presentation.theme.ui.NewsToDayTheme
 
@@ -35,7 +37,7 @@ fun MainScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationItem.Home.route) {
+    NavHost(navController, startDestination = NavigationItem.Category.route) {
         composable(NavigationItem.Home.route) {
             HomeScreen()
         }
@@ -46,7 +48,12 @@ fun Navigation(navController: NavHostController) {
             FavoriteScreen()
         }
         composable(NavigationItem.Account.route) {
-            AccountScreen()
+            PersonalAccountScreen{
+                navController.navigate("language_screen")
+            }
+        }
+        composable("language_screen"){
+            LanguageScreen()
         }
     }
 }
