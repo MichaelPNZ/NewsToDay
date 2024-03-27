@@ -46,7 +46,6 @@ fun MainScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationItem.Category.route) {
     val viewModel: TestViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle(TestState.Initial)
     NavHost(navController, startDestination = NavigationItem.Home.route) {
@@ -63,20 +62,22 @@ fun Navigation(navController: NavHostController) {
             FavoriteScreen()
         }
         composable(NavigationItem.Account.route) {
-            PersonalAccountScreen{
+            PersonalAccountScreen {
                 navController.navigate("language_screen")
             }
         }
-        composable("language_screen"){
+        composable("language_screen") {
             LanguageScreen()
         }
         composable(NavigationObject.DetailScreen.route) {
-            val article = navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
-                ?: Article(Source("", ""), "", "", "", "", "", "", "")
+            val article =
+                navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
+                    ?: Article(Source("", ""), "", "", "", "", "", "", "")
             DetailsNewsScreen(article)
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
