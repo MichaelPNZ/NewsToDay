@@ -126,7 +126,7 @@ fun DotsIndicator(
             if (index == selectedIndex) {
                 Box(
                     modifier = Modifier
-                        .size(10.dp)
+                        .size(24.dp,10.dp)
                         .clip(CircleShape)
                         .background(color = PurplePrimary)
                 )
@@ -149,7 +149,7 @@ fun DotsIndicator(
 @Preview(showBackground = true)
 @Composable
 fun OnboardingScreenPreeview(){
-    OnboardingScreen()
+    OnboardingScreen({})
 }
 val images = listOf(
     R.drawable.image_text,
@@ -158,8 +158,3 @@ val images = listOf(
 )
 val firstText ="First to know"
 val allText = "All news in one place, be\nthe first to know last news"
-val textButton = listOf(
-    "Next",
-    "Next",
-    "Get Started"
-)
