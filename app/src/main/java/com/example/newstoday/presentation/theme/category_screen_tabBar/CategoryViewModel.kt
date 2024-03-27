@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newstoday.domain.usecases.GetUsersUseCase
+import com.example.newstoday.domain.usecases.GetUserByIdUseCase
 import com.example.newstoday.domain.usecases.SaveUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val getUsersUseCase: GetUsersUseCase,
+    private val getUsersUseCase: GetUserByIdUseCase,
     private val saveUserUseCase: SaveUserUseCase,
 ) : ViewModel() {
 
@@ -26,10 +26,8 @@ class CategoryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val user = getUsersUseCase()
-            if (user.id == 1) {
-                _categories.value = user.favoriteCategories.toImmutableList()
-            }
+            val user = getUsersUseCase(1)
+            _categories.value = user.favoriteCategories.toImmutableList()
         }
     }
 
@@ -39,8 +37,8 @@ class CategoryViewModel @Inject constructor(
 
     fun toggleCategory(category: String) {
         viewModelScope.launch {
-            val user = getUsersUseCase()
-            if (user.id == 1 && user.favoriteCategories.contains(category)) {
+            val user = getUsersUseCase(1)
+            if (user.favoriteCategories.contains(category)) {
                 val update = user.copy(favoriteCategories = user.favoriteCategories.minus(category))
                 saveUserUseCase(update)
                 _categories.value = update.favoriteCategories.toImmutableList()

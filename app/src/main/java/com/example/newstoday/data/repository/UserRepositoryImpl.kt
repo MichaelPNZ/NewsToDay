@@ -13,11 +13,19 @@ class UserRepositoryImpl @Inject constructor(
 
     private val userDao = db.usersDao
 
-    override suspend fun getUser(): User {
-        return userDao.getUser()?.toUser() ?: User(0, "", "", emptyList())
+    override suspend fun getUserById(id: Int): User {
+        return userDao.getUserById(id)?.toUser() ?: User(0, "", "", emptyList())
     }
 
     override suspend fun saveUser(user: User) {
         userDao.insertUser(UserDBO(user.id, user.email, user.password, user.favoriteCategories))
+    }
+
+    override suspend fun getUserByEmail(email: String): User {
+        return userDao.getUserByEmail(email)?.toUser() ?: User(0, "", "", emptyList())
+    }
+
+    override suspend fun getAllUser(): List<User> {
+        return userDao.getAllUser()?.map { it.toUser() } ?: emptyList()
     }
 }

@@ -9,7 +9,7 @@ import com.google.gson.Gson
 
 @Entity
 data class ArticleDBO(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo("source") val source: Source,
     @ColumnInfo("author") val author: String,
     @ColumnInfo("title") val title: String,
