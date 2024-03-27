@@ -20,6 +20,36 @@ class CategoryViewModel @Inject constructor(
     private val saveUserUseCase: SaveUserUseCase,
 ) : ViewModel() {
 
+    val categoriesList = listOf(
+        "Sports",
+        "Politics",
+        "Life",
+        "Gaming",
+        "Animals",
+        "Nature",
+        "Food",
+        "Art",
+        "History",
+        "Fashion",
+        "Covid-19",
+        "Middle East"
+    )
+
+    val emojiList = listOf(
+        "\uD83C\uDFC8   ",
+        "⚖\uFE0F   ",
+        "\uD83C\uDF1E   ",
+        "\uD83C\uDFAE   ",
+        "\uD83D\uDC3B   ",
+        "\uD83C\uDF34   ",
+        "\uD83C\uDF54   ",
+        "\uD83C\uDFA8   ",
+        "\uD83D\uDCDC   ",
+        "\uD83D\uDC57   ",
+        "\uD83D\uDE37   ",
+        "⚔\uFE0F   "
+    )
+
     private val _categories: MutableState<ImmutableList<String>> =
         mutableStateOf(persistentListOf())
     val categories: State<ImmutableList<String>> = _categories
