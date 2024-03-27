@@ -1,6 +1,5 @@
-package com.example.newstoday.presentation.theme.category_screen_tabBar
+package com.example.newstoday.presentation.theme.category_screen_first_entry
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,14 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryItem
+import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryViewModel
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
-import com.example.newstoday.presentation.theme.ui.GreyDark
-import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
 import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @Composable
-fun CategoryScreen(
+fun CategoryScreenFirstEntry(
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
     Column(
@@ -41,7 +40,7 @@ fun CategoryScreen(
             .background(Color.White),
     ) {
         Text(
-            text = "Categories",
+            text = "Select your favorite topics",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.SemiBold,
             color = BlackPrimary,
@@ -50,16 +49,15 @@ fun CategoryScreen(
         Text(
             modifier = Modifier
                 .padding(vertical = 8.dp),
-            text = "Thousands of articles in each category",
+            text = "Select some of your favorite topics to let us suggest better news for you.",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Normal,
             color = GreyPrimary,
             fontSize = 16.sp,
         )
-
         LazyVerticalGrid(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(vertical = 8.dp),
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -74,40 +72,26 @@ fun CategoryScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun CategoryItem(
-    emoji: String,
-    category: String,
-    isSelected: Boolean,
-    onCategoryClicked: (String) -> Unit
-) {
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp),
-        onClick = {
-            onCategoryClicked(category)
-        },
-        border = BorderStroke(1.dp, GreyLighter),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(if (isSelected) PurplePrimary else Color.White),
-    ) {
-        Text(
-            text = emoji + category,
-            color = if (isSelected) Color.White else GreyDark,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            maxLines = 1
-        )
+        Button(onClick = {  },
+            modifier = Modifier
+                .height(56.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonColors(
+                containerColor = PurplePrimary,
+                contentColor = Color.White,
+                disabledContainerColor = PurplePrimary,
+                disabledContentColor =Color.White)
+        ) {
+            Text(text = "Next",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold)
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryScreenPreview() {
-    CategoryScreen()
+fun CategoryScreenFirstEntryPreview() {
+    CategoryScreenFirstEntry()
 }
