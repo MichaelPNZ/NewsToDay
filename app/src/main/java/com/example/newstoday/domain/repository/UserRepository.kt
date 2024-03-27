@@ -4,6 +4,8 @@ import com.example.newstoday.domain.model.User
 
 interface UserRepository {
 
-    suspend fun getUser(): User
+    suspend fun getUserById(id: Int): User
     suspend fun saveUser(user: User)
+    suspend fun getUserByEmail(email: String): User
+    suspend fun getAllUser(): List<User>
 }
