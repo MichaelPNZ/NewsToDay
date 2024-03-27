@@ -14,7 +14,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userDao = db.usersDao
 
     override suspend fun getUserById(id: Int): User {
-        return userDao.getUserById(id)?.toUser() ?: User(0, "", "", emptyList())
+        return userDao.getUserById(id)?.toUser() ?: User(1, "123@123", "123", emptyList())
     }
 
     override suspend fun saveUser(user: User) {
@@ -22,7 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserByEmail(email: String): User {
-        return userDao.getUserByEmail(email)?.toUser() ?: User(0, "", "", emptyList())
+        return userDao.getUserByEmail(email)?.toUser() ?: User(1, "", "", emptyList())
     }
 
     override suspend fun getAllUser(): List<User> {
