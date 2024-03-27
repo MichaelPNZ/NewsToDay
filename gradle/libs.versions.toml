@@ -21,6 +21,7 @@ navigationCompose = "2.7.7"
 retrofit = "2.9.0"
 room = "2.6.1"
 ksp = "1.9.22-1.0.17"
+navigationRuntimeKtx = "2.7.7"
 
 
 [libraries]
@@ -62,6 +63,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
