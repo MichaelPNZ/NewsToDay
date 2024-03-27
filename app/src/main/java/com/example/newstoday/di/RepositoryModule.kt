@@ -1,7 +1,9 @@
 package com.example.newstoday.di
 
 import com.example.newstoday.data.repository.ArticlesRepositoryImpl
+import com.example.newstoday.data.repository.UserRepositoryImpl
 import com.example.newstoday.domain.repository.ArticleRepository
+import com.example.newstoday.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +16,11 @@ interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun bindQuestionsRepository(impl: ArticlesRepositoryImpl): ArticleRepository
+    fun bindArticleRepository(impl: ArticlesRepositoryImpl): ArticleRepository
+
+    @Binds
+    @Singleton
+    fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
 
 }
