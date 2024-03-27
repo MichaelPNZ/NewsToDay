@@ -2,8 +2,8 @@
 
 package com.example.newstoday.presentation.theme.home_screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +43,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.newstoday.R
 import com.example.newstoday.domain.model.Article
@@ -58,8 +55,10 @@ import kotlinx.collections.immutable.toImmutableList
 
 
 @Composable
-fun HomeScreen(viewModel: TestViewModel = hiltViewModel()) {
-    val screenState = viewModel.screenState.collectAsStateWithLifecycle(TestState.Initial)
+fun ScreenContents(
+    news: ImmutableList<Article>?,
+    navigateToDetail: (Article) -> Unit
+) {
     val searchText = remember { mutableStateOf("") }
     var buttonColor by remember { mutableStateOf(GreyLighter) }
 
@@ -125,7 +124,8 @@ fun HomeScreen(viewModel: TestViewModel = hiltViewModel()) {
 
             }
         }
-        ScreenContents(screenState = screenState, viewModel = viewModel)
+        Spacer(modifier = Modifier.padding(bottom = 20.dp))
+        ScrollNews(news, navigateToDetail)
     }
 }
 
@@ -133,7 +133,7 @@ fun HomeScreen(viewModel: TestViewModel = hiltViewModel()) {
 @Composable
 fun ScrollNews(
     news: ImmutableList<Article>?,
-    viewModel: TestViewModel,
+    navigateToDetail: (Article) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -146,7 +146,7 @@ fun ScrollNews(
                 items(items = news) {
                     NewsItems(
                         article = it,
-                        viewModel = viewModel
+                        navigateToDetail
                     )
                 }
             }
@@ -174,7 +174,7 @@ fun ScrollNews(
 @Composable
 fun NewsItems(
     article: Article,
-    viewModel: TestViewModel,
+    navigateToDetail: (Article) -> Unit
 ) {
     Spacer(modifier = Modifier.padding(start = 20.dp))
     Card(
@@ -189,11 +189,14 @@ fun NewsItems(
             AsyncImage(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .background(Color.White, RoundedCornerShape(16.dp)),
+                    .background(Color.White, RoundedCornerShape(16.dp))
+                    .clickable {
+                     navigateToDetail(article)
+                    },
                 contentScale = ContentScale.Crop,
-                imageLoader = viewModel.imageLoader,
                 model = article.urlToImage,
                 contentDescription = null
+
             )
             IconButton(onClick = {
 
@@ -232,11 +235,11 @@ fun NewsItems(
 }
 
 @Composable
-fun ScreenContents(
-    screenState: State<TestState>,
-    viewModel: TestViewModel,
+fun HomeScreen(
+    screenState: TestState,
+    navigateToDetail: (Article) -> Unit,
 ) {
-    when (val currentState = screenState.value) {
+    when (screenState) {
         is TestState.Initial -> {}
         is TestState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -252,10 +255,10 @@ fun ScreenContents(
 
         is TestState.Articles -> {
             Box(modifier = Modifier.padding(top = 20.dp), contentAlignment = Alignment.Center) {
-                ScrollNews(
-                    news = currentState.articles?.filter { it.urlToImage.isNotEmpty() }
-                        ?.toImmutableList(),
-                    viewModel = viewModel)
+               ScreenContents( news = screenState.articles?.filter { it.urlToImage.isNotEmpty() }
+                   ?.toImmutableList(),
+                   navigateToDetail)
+
             }
         }
     }
