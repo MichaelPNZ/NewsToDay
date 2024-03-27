@@ -1,4 +1,4 @@
-package com.example.newstoday.data.local
+package com.example.newstoday.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
