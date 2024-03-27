@@ -23,6 +23,9 @@ import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryS
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.home_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
+import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
+import com.example.newstoday.presentation.theme.personal_account_screen.PersonalAccountScreen
+import com.example.newstoday.presentation.theme.test.TestScreen
 import com.example.newstoday.presentation.theme.test.TestState
 import com.example.newstoday.presentation.theme.test.TestViewModel
 import com.example.newstoday.presentation.theme.ui.NewsToDayTheme
@@ -43,6 +46,7 @@ fun MainScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController) {
+    NavHost(navController, startDestination = NavigationItem.Category.route) {
     val viewModel: TestViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsStateWithLifecycle(TestState.Initial)
     NavHost(navController, startDestination = NavigationItem.Home.route) {
@@ -59,7 +63,12 @@ fun Navigation(navController: NavHostController) {
             FavoriteScreen()
         }
         composable(NavigationItem.Account.route) {
-            AccountScreen()
+            PersonalAccountScreen{
+                navController.navigate("language_screen")
+            }
+        }
+        composable("language_screen"){
+            LanguageScreen()
         }
         composable(NavigationObject.DetailScreen.route) {
             val article = navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
