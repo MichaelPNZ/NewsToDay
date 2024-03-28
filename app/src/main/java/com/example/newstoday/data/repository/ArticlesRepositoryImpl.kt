@@ -1,7 +1,6 @@
 package com.example.newstoday.data.repository
 
 import com.example.newstoday.data.local.AppDatabase
-import com.example.newstoday.data.local.entity.ArticleDBO
 import com.example.newstoday.data.mapper.toArticle
 import com.example.newstoday.data.network.ApiService
 import com.example.newstoday.domain.model.Article
@@ -51,15 +50,25 @@ class ArticlesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveArticle(result: ArticleDBO) {
-        articlesDao.insertArticle(result)
+//    override suspend fun saveArticle(result: Article) {
+//        articlesDao.insertArticle(
+//            ArticleDBO(
+//                result.source,
+//                result.author,
+//                result.title,
+//                result.description,
+//                result.url,
+//                result.urlToImage,
+//                result.publishedAt,
+//                result.content,
+//            ))
+//    }
+
+    override suspend fun getArticlesFromCache(): List<Article> {
+        return articlesDao.getArticles().map { it.toArticle() }
     }
 
-    override suspend fun getArticlesFromCache(): List<ArticleDBO> {
-        return articlesDao.getArticles()
-    }
-
-    override suspend fun getFavoriteArticlesFromCache(): ArticleDBO? {
-        return articlesDao.getFavoriteArticles()
+    override suspend fun getFavoriteArticlesFromCache(): Article? {
+        return articlesDao.getFavoriteArticles()?.toArticle()
     }
 }

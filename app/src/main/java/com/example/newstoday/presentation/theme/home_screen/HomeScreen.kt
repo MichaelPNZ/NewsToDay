@@ -173,7 +173,9 @@ fun HomeScreenContent(
 
             is SelectCategoryState.SelectCategory -> {
                 NewsList(currentState.selectedCategoryList?.filter { it.urlToImage.isNotEmpty() }
-                    ?.toImmutableList(), navigateToDetail)
+                    ?.toImmutableList(),
+                    viewModel = viewModel,
+                    navigateToDetail)
             }
         }
 
@@ -214,7 +216,10 @@ fun HomeScreenContent(
 
             is FavoriteCategoryState.FavoriteCategory -> {
                 NewsList(currentFavoriteState.favoriteCategoryList?.filter { it.urlToImage.isNotEmpty() }
-                    ?.toImmutableList(), navigateToDetail)
+                    ?.toImmutableList(),
+                    viewModel = viewModel,
+                    navigateToDetail
+                )
             }
         }
     }
@@ -223,6 +228,7 @@ fun HomeScreenContent(
 @Composable
 fun NewsList(
     news: ImmutableList<Article>?,
+    viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
     Column(
@@ -236,6 +242,7 @@ fun NewsList(
                 items(items = news) {
                     NewsItems(
                         article = it,
+                        viewModel = viewModel,
                         navigateToDetail
                     )
                 }
@@ -247,6 +254,7 @@ fun NewsList(
 @Composable
 fun NewsItems(
     article: Article,
+    viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
     Spacer(modifier = Modifier.padding(start = 20.dp))
@@ -271,12 +279,14 @@ fun NewsItems(
                 contentDescription = null
             )
             IconButton(
-                onClick = { },
+                onClick = {
+                    viewModel.changeFavoriteStatus(article.title)
+                },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.favorite_icon), "favorites",
-                    tint = Color.White
+                    tint = if (viewModel.isFavoriteCheck(article.title)) Color.White else Color.Red
                 )
             }
 

@@ -1,15 +1,17 @@
 package com.example.newstoday.presentation.theme.home_screen
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
+import com.example.newstoday.domain.model.Article
 import com.example.newstoday.domain.usecases.GetArticleByCategoryUseCase
+import com.example.newstoday.domain.usecases.GetArticleFromCacheUseCase
 import com.example.newstoday.domain.usecases.GetFavoriteCategoriesUseCase
 import com.example.newstoday.domain.usecases.GetUserByIdUseCase
-import com.example.newstoday.domain.usecases.SaveArticleUseCase
+import com.example.newstoday.domain.usecases.SaveUserUseCase
 import com.example.newstoday.utils.LoadResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -17,6 +19,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -24,8 +27,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getArticleByCategoryUseCase: GetArticleByCategoryUseCase,
     private val getFavoriteCategoriesUseCase: GetFavoriteCategoriesUseCase,
-    private val saveArticleUseCase: SaveArticleUseCase,
+    private val getArticleFromCacheUseCase: GetArticleFromCacheUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val saveUserUseCase: SaveUserUseCase,
     val imageLoader: ImageLoader,
 ) : ViewModel() {
 
@@ -37,13 +41,21 @@ class HomeViewModel @Inject constructor(
         mutableStateOf(String())
     val category: State<String> = _category
 
+    private val _favorite: MutableState<ImmutableList<Article>> =
+        mutableStateOf(persistentListOf())
+    val favorite: State<ImmutableList<Article>> = _favorite
+
     init {
         runBlocking  {
             val user = getUserByIdUseCase(1)
-            _categories.value = user.favoriteCategories.toImmutableList()
-            _category.value = user.favoriteCategories.first()
+            if (user.favoriteCategories.isNotEmpty()) {
+                _category.value = user.favoriteCategories.first()
+                _categories.value = user.favoriteCategories.toImmutableList()
+            } else {
+                _category.value = "Random"
+                _categories.value = listOf("Random").toImmutableList()
+            }
         }
-        Log.i("!!!", "$categories")
     }
 
     private val selectedCategoryFlow = getArticleByCategoryUseCase(_category.value)
@@ -87,5 +99,26 @@ class HomeViewModel @Inject constructor(
 
     fun isSelectCheck(category: String): Boolean {
         return _category.value.contains(category)
+    }
+
+    fun isFavoriteCheck(checkString: String): Boolean {
+        return _favorite.value.find { it.title == checkString } != null
+    }
+
+    fun changeFavoriteStatus(checkString: String) {
+        viewModelScope.launch {
+            val user = getUserByIdUseCase(1)
+            user.articles.map { news ->
+                if (news.title == checkString) {
+                    val update = user.copy(articles = user.articles.minus(news))
+                    saveUserUseCase(update)
+                    _favorite.value = update.articles.toImmutableList()
+                } else {
+                    val update = user.copy(articles = user.articles.plus(news))
+                    saveUserUseCase(update)
+                    _favorite.value = update.articles.toImmutableList()
+                }
+            }
+        }
     }
 }
