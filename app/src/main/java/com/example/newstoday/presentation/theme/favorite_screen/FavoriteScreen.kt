@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newstoday.R
+import com.example.newstoday.navigation.NavigationItem.Account.icon
 
 const val Kolvo = 2
 
@@ -56,7 +58,7 @@ fun FavoriteScreen() {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 72.dp, start = 20.dp)
+                .padding(top = 40.dp, start = 20.dp)
         )
         Text(
             text = "Saved articles to the library", style = TextStyle(
@@ -66,14 +68,14 @@ fun FavoriteScreen() {
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 112.dp, start = 20.dp)
+                .padding(top = 90.dp, start = 20.dp)
         )
         if (Kolvo > 0) {
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 168.dp, bottom = 16.dp, start = 32.dp, end = 32.dp),
+                    .padding(top = 130.dp, bottom = 16.dp, start = 32.dp, end = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(Kolvo) {
@@ -81,8 +83,7 @@ fun FavoriteScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                             .height(80.dp)
-                            .clickable { //Навигацию к новости
-                            },
+                            .clickable { /* Навигация к новости */ },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
@@ -93,7 +94,7 @@ fun FavoriteScreen() {
                                 .clip(RoundedCornerShape(12.dp))
                         )
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.weight(1f), // Используйте вес, чтобы Column занимала оставшееся доступное пространство
                             verticalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
@@ -104,7 +105,6 @@ fun FavoriteScreen() {
                                     color = Color.Black
                                 ),
                                 modifier = Modifier
-                                    .fillMaxWidth()
                                     .padding(top = 5.dp)
                             )
                             Text(
@@ -120,7 +120,15 @@ fun FavoriteScreen() {
                                     .padding(bottom = 5.dp)
                             )
                         }
+                        Icon(
+                            painterResource(id = R.drawable.favorite_icon),
+                            contentDescription = "",
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                                .padding(bottom = 40.dp)
+                                .clickable {  }
+                        )
                     }
+
                 }
             }
         } else {
