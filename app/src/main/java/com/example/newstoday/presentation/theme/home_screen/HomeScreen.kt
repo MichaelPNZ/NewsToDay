@@ -127,7 +127,7 @@ fun HomeScreenContent(
         )
 
         LazyRow(modifier = Modifier.padding(top = 20.dp, start = 15.dp)) {
-            items(viewModel.categories.value) { category ->
+            items(viewModel.categories.value[0].favoriteCategories) { category ->
                 Button(
                     onClick = {
                         viewModel.changeCategory(category)
@@ -280,13 +280,13 @@ fun NewsItems(
             )
             IconButton(
                 onClick = {
-                    viewModel.changeFavoriteStatus(article.title)
+                    viewModel.changeFavoriteStatus(article)
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.favorite_icon), "favorites",
-                    tint = if (viewModel.isFavoriteCheck(article.title)) Color.White else Color.Red
+                    tint = if (viewModel.isFavoriteCheck(article)) Color.Red else Color.White
                 )
             }
 

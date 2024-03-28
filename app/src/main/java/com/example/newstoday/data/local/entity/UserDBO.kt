@@ -16,7 +16,6 @@ data class UserDBO(
     @ColumnInfo("password") val password: String,
     @ColumnInfo("favoriteCategories") val favoriteCategories: List<String>,
     @ColumnInfo("articles") val articles: List<Article>,
-
     )
 
 class StringListConverter {

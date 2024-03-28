@@ -3,10 +3,12 @@ package com.example.newstoday.presentation.theme.category_screen_tabBar
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newstoday.domain.usecases.GetUserByIdUseCase
 import com.example.newstoday.domain.usecases.SaveUserUseCase
+import com.example.newstoday.presentation.theme.home_screen.HomeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import com.example.newstoday.domain.model.Article
+import com.example.newstoday.domain.model.User
 import com.example.newstoday.domain.usecases.GetArticleByCategoryUseCase
 import com.example.newstoday.domain.usecases.GetArticleFromCacheUseCase
 import com.example.newstoday.domain.usecases.GetFavoriteCategoriesUseCase
@@ -27,41 +28,36 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getArticleByCategoryUseCase: GetArticleByCategoryUseCase,
     private val getFavoriteCategoriesUseCase: GetFavoriteCategoriesUseCase,
-    private val getArticleFromCacheUseCase: GetArticleFromCacheUseCase,
     private val getUserByIdUseCase: GetUserByIdUseCase,
     private val saveUserUseCase: SaveUserUseCase,
     val imageLoader: ImageLoader,
 ) : ViewModel() {
 
-    private val _categories: MutableState<ImmutableList<String>> =
+    private val _categories: MutableState<ImmutableList<User>> =
         mutableStateOf(persistentListOf())
-    val categories: State<ImmutableList<String>> = _categories
+    val categories: State<ImmutableList<User>> = _categories
 
     private val _category: MutableState<String> =
         mutableStateOf(String())
     val category: State<String> = _category
-
-    private val _favorite: MutableState<ImmutableList<Article>> =
-        mutableStateOf(persistentListOf())
-    val favorite: State<ImmutableList<Article>> = _favorite
 
     init {
         runBlocking  {
             val user = getUserByIdUseCase(1)
             if (user.favoriteCategories.isNotEmpty()) {
                 _category.value = user.favoriteCategories.first()
-                _categories.value = user.favoriteCategories.toImmutableList()
+                _categories.value = listOf(user).toImmutableList()
             } else {
                 _category.value = "Random"
-                _categories.value = listOf("Random").toImmutableList()
+                _categories.value = emptyList<User>().toImmutableList()
             }
         }
     }
 
     private val selectedCategoryFlow = getArticleByCategoryUseCase(_category.value)
-    private val favoriteCategoryFlow = getFavoriteCategoriesUseCase(_categories.value)
+    private val favoriteCategoryFlow = getFavoriteCategoriesUseCase(_categories.value[0].favoriteCategories)
 
-    val selectedCategoryState = selectedCategoryFlow
+    var selectedCategoryState = selectedCategoryFlow
         .map { result ->
             when (result) {
                 is LoadResource.Success -> {
@@ -93,6 +89,7 @@ class HomeViewModel @Inject constructor(
         }
         .onStart { emit(FavoriteCategoryState.Loading) }
 
+
     fun changeCategory(category: String) {
         _category.value = category
     }
@@ -101,23 +98,27 @@ class HomeViewModel @Inject constructor(
         return _category.value.contains(category)
     }
 
-    fun isFavoriteCheck(checkString: String): Boolean {
-        return _favorite.value.find { it.title == checkString } != null
+    fun isFavoriteCheck(article: Article): Boolean {
+        return if (_categories.value[0].articles.isEmpty()) {
+            false
+        } else if (_categories.value[0].articles.contains(article)) {
+            true
+        } else {
+            false
+        }
     }
 
-    fun changeFavoriteStatus(checkString: String) {
+    fun changeFavoriteStatus(article: Article) {
         viewModelScope.launch {
             val user = getUserByIdUseCase(1)
-            user.articles.map { news ->
-                if (news.title == checkString) {
-                    val update = user.copy(articles = user.articles.minus(news))
-                    saveUserUseCase(update)
-                    _favorite.value = update.articles.toImmutableList()
-                } else {
-                    val update = user.copy(articles = user.articles.plus(news))
-                    saveUserUseCase(update)
-                    _favorite.value = update.articles.toImmutableList()
-                }
+            if (user.articles.contains(article)) {
+                val update = user.copy(articles = user.articles.minus(article))
+                saveUserUseCase(update)
+                _categories.value = listOf(update).toImmutableList()
+            } else {
+                val update = user.copy(articles = user.articles.plus(article))
+                saveUserUseCase(update)
+                _categories.value = listOf(update).toImmutableList()
             }
         }
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newstoday.presentation.theme.home_screen.HomeViewModel
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
 import com.example.newstoday.presentation.theme.ui.GreyDark
 import com.example.newstoday.presentation.theme.ui.GreyLighter
@@ -33,6 +34,7 @@ import com.example.newstoday.presentation.theme.ui.PurplePrimary
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
