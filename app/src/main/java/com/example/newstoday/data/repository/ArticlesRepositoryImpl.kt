@@ -1,6 +1,5 @@
 package com.example.newstoday.data.repository
 
-import com.example.newstoday.data.local.AppDatabase
 import com.example.newstoday.data.mapper.toArticle
 import com.example.newstoday.data.network.ApiService
 import com.example.newstoday.domain.model.Article
@@ -11,11 +10,9 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ArticlesRepositoryImpl @Inject constructor(
-    db: AppDatabase,
     private val  apiService: ApiService
 ) : ArticleRepository {
 
-    private val articlesDao = db.articlesDao
 
     override fun getArticles(): Flow<LoadResource<List<Article>?>> {
         return flow {
@@ -48,27 +45,5 @@ class ArticlesRepositoryImpl @Inject constructor(
                 emit(LoadResource.Error("Неизвестная ошибка"))
             }
         }
-    }
-
-//    override suspend fun saveArticle(result: Article) {
-//        articlesDao.insertArticle(
-//            ArticleDBO(
-//                result.source,
-//                result.author,
-//                result.title,
-//                result.description,
-//                result.url,
-//                result.urlToImage,
-//                result.publishedAt,
-//                result.content,
-//            ))
-//    }
-
-    override suspend fun getArticlesFromCache(): List<Article> {
-        return articlesDao.getArticles().map { it.toArticle() }
-    }
-
-    override suspend fun getFavoriteArticlesFromCache(): Article? {
-        return articlesDao.getFavoriteArticles()?.toArticle()
     }
 }

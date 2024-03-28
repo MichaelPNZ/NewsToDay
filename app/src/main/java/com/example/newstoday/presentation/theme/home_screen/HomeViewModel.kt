@@ -9,7 +9,6 @@ import coil.ImageLoader
 import com.example.newstoday.domain.model.Article
 import com.example.newstoday.domain.model.User
 import com.example.newstoday.domain.usecases.GetArticleByCategoryUseCase
-import com.example.newstoday.domain.usecases.GetArticleFromCacheUseCase
 import com.example.newstoday.domain.usecases.GetFavoriteCategoriesUseCase
 import com.example.newstoday.domain.usecases.GetUserByIdUseCase
 import com.example.newstoday.domain.usecases.SaveUserUseCase

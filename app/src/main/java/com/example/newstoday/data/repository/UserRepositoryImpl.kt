@@ -14,7 +14,14 @@ class UserRepositoryImpl @Inject constructor(
     private val userDao = db.usersDao
 
     override suspend fun getUserById(id: Int): User {
-        return userDao.getUserById(id)?.toUser() ?: User(1, "123@123", "123", emptyList(), emptyList())
+        return userDao.getUserById(id)?.toUser()
+            ?: User(
+                1,
+                "123@123",
+                "123",
+                listOf("Random"),
+                emptyList()
+            )
     }
 
     override suspend fun saveUser(user: User) {

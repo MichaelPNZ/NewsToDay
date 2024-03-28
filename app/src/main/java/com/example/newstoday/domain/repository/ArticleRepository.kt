@@ -9,8 +9,4 @@ interface ArticleRepository {
     fun getArticles(): Flow<LoadResource<List<Article>?>>
     fun getCategory(category: String): Flow<LoadResource<List<Article>?>>
     fun getFavoriteCategories(categories: List<String>): Flow<LoadResource<List<Article>?>>
-
-//    suspend fun saveArticle(result: Article)
-    suspend fun getArticlesFromCache(): List<Article>?
-    suspend fun getFavoriteArticlesFromCache(): Article?
 }
