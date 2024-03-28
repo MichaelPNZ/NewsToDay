@@ -40,17 +40,6 @@ class ArticlesRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getSelectedCategories(categories: List<String>): Flow<LoadResource<List<Article>?>> {
-        return flow {
-            try {
-                val articles = apiService.getSelectedCategories(categories).articles?.map { it.toArticle() }
-                emit(LoadResource.Success(articles))
-            } catch (e: Exception) {
-                emit(LoadResource.Error("Неизвестная ошибка"))
-            }
-        }
-    }
-
     override fun getFavoriteCategories(categories: List<String>): Flow<LoadResource<List<Article>?>> {
         return flow {
             try {

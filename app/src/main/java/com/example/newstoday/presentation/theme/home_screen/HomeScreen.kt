@@ -31,9 +31,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,26 +42,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.newstoday.R
 import com.example.newstoday.domain.model.Article
-import com.example.newstoday.presentation.theme.test.TestState
-import com.example.newstoday.presentation.theme.test.TestViewModel
 import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
+import com.example.newstoday.presentation.theme.ui.PurplePrimary
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
+@Composable
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
+    navigateToDetail: (Article) -> Unit,
+) {
+    val selectedCategoryState =
+        viewModel.selectedCategoryState.collectAsStateWithLifecycle(SelectCategoryState.Initial)
+    val favoriteCategoryState =
+        viewModel.favoriteCategoryState.collectAsStateWithLifecycle(FavoriteCategoryState.Initial)
+
+    HomeScreenContent(
+        selectedCategoryState = selectedCategoryState,
+        favoriteCategoryState = favoriteCategoryState,
+        viewModel = viewModel,
+        navigateToDetail = navigateToDetail
+    )
+}
 
 @Composable
-fun ScreenContents(
-    news: ImmutableList<Article>?,
-    navigateToDetail: (Article) -> Unit
+fun HomeScreenContent(
+    selectedCategoryState: State<SelectCategoryState>,
+    favoriteCategoryState: State<FavoriteCategoryState>,
+    viewModel: HomeViewModel,
+    navigateToDetail: (Article) -> Unit,
 ) {
-    val searchText = remember { mutableStateOf("") }
-    var buttonColor by remember { mutableStateOf(GreyLighter) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -71,7 +92,7 @@ fun ScreenContents(
             "Browse",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 70.dp, start = 20.dp),
+            modifier = Modifier.padding(top = 16.dp, start = 20.dp),
             lineHeight = 32.sp
         )
         Text(
@@ -81,13 +102,13 @@ fun ScreenContents(
         )
 
         OutlinedTextField(
-            "",
-            onValueChange = { searchText.value = it },
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, top = 40.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 30.dp),
             shape = RoundedCornerShape(12.dp),
-
             placeholder = { Text("Search", color = GreyPrimary) },
             leadingIcon = {
                 Icon(
@@ -102,15 +123,18 @@ fun ScreenContents(
                 errorContainerColor = Color.Transparent,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
-
                 )
         )
-        val categoryList = listOf("Random", "Apple", "Tesla", "Business", "TechCrunch", "News")
+
         LazyRow(modifier = Modifier.padding(top = 20.dp, start = 15.dp)) {
-            items(categoryList) { category ->
+            items(viewModel.categories.value) { category ->
                 Button(
                     onClick = {
-                    }, colors = ButtonDefaults.buttonColors(buttonColor),
+                        viewModel.changeCategory(category)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        if (viewModel.isSelectCheck(category)) PurplePrimary else GreyLighter
+                    ),
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -118,20 +142,86 @@ fun ScreenContents(
                         .padding(end = 8.dp, start = 8.dp),
                     elevation = ButtonDefaults.buttonElevation(5.dp)
                 ) {
-                    Text(category, color = GreyPrimary, fontSize = 10.sp)
+                    Text(
+                        category,
+                        color = if (viewModel.isSelectCheck(category)) Color.White else GreyPrimary,
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                    )
                 }
-
-
             }
         }
         Spacer(modifier = Modifier.padding(bottom = 20.dp))
-        ScrollNews(news, navigateToDetail)
+
+        when (val currentState = selectedCategoryState.value) {
+            is SelectCategoryState.Initial -> {}
+            is SelectCategoryState.Loading -> {
+                Box(modifier = Modifier.fillMaxWidth()
+                    .height(256.dp),
+                    contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is SelectCategoryState.Error -> {
+                Box(modifier = Modifier.fillMaxWidth()
+                    .height(256.dp),
+                    contentAlignment = Alignment.Center) {
+                    Text(text = "Error")
+                }
+            }
+
+            is SelectCategoryState.SelectCategory -> {
+                NewsList(currentState.selectedCategoryList?.filter { it.urlToImage.isNotEmpty() }
+                    ?.toImmutableList(), navigateToDetail)
+            }
+        }
+
+        Spacer(modifier = Modifier.padding(16.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                "Recommended for you",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 20.dp)
+            )
+            Text(
+                "See All",
+                fontSize = 14.sp,
+                color = GreyPrimary,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.padding(16.dp))
+        when (val currentFavoriteState = favoriteCategoryState.value) {
+            is FavoriteCategoryState.Initial -> {}
+            is FavoriteCategoryState.Loading -> {
+                Box(modifier = Modifier.fillMaxWidth()
+                    .height(256.dp),
+                    contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is FavoriteCategoryState.Error -> {
+                Box(modifier = Modifier.fillMaxWidth()
+                    .height(256.dp),
+                    contentAlignment = Alignment.Center) {
+                    Text(text = "Error")
+                }
+            }
+
+            is FavoriteCategoryState.FavoriteCategory -> {
+                NewsList(currentFavoriteState.favoriteCategoryList?.filter { it.urlToImage.isNotEmpty() }
+                    ?.toImmutableList(), navigateToDetail)
+            }
+        }
     }
 }
 
-
 @Composable
-fun ScrollNews(
+fun NewsList(
     news: ImmutableList<Article>?,
     navigateToDetail: (Article) -> Unit
 ) {
@@ -150,25 +240,8 @@ fun ScrollNews(
                     )
                 }
             }
-
-        }
-        Spacer(modifier = Modifier.padding(30.dp))
-        Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                "Recommended for you",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Text(
-                "See All",
-                fontSize = 14.sp,
-                color = GreyPrimary,
-                modifier = Modifier.padding(end = 20.dp)
-            )
         }
     }
-
 }
 
 @Composable
@@ -191,22 +264,22 @@ fun NewsItems(
                     .aspectRatio(1f)
                     .background(Color.White, RoundedCornerShape(16.dp))
                     .clickable {
-                     navigateToDetail(article)
+                        navigateToDetail(article)
                     },
                 contentScale = ContentScale.Crop,
                 model = article.urlToImage,
                 contentDescription = null
-
             )
-            IconButton(onClick = {
-
-            }, modifier = Modifier.align(Alignment.TopEnd)) {
+            IconButton(
+                onClick = { },
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.favorite_icon), "favorites",
                     tint = Color.White
                 )
-
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -229,36 +302,6 @@ fun NewsItems(
                     fontSize = 14.sp,
                     color = Color.White
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(
-    screenState: TestState,
-    navigateToDetail: (Article) -> Unit,
-) {
-    when (screenState) {
-        is TestState.Initial -> {}
-        is TestState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is TestState.Error -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Error")
-            }
-        }
-
-        is TestState.Articles -> {
-            Box(modifier = Modifier.padding(top = 20.dp), contentAlignment = Alignment.Center) {
-               ScreenContents( news = screenState.articles?.filter { it.urlToImage.isNotEmpty() }
-                   ?.toImmutableList(),
-                   navigateToDetail)
-
             }
         }
     }
