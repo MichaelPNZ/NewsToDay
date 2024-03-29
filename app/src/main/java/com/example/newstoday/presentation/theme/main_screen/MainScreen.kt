@@ -50,7 +50,10 @@ fun Navigation(navController: NavHostController) {
             CategoryScreen()
         }
         composable(NavigationItem.Favorite.route) {
-            FavoriteScreen()
+            FavoriteScreen {
+                navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
+                navController.navigate(NavigationObject.DetailScreen.route)
+            }
         }
         composable(NavigationItem.Account.route) {
             PersonalAccountScreen {
