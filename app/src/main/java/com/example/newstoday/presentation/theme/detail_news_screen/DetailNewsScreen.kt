@@ -1,7 +1,5 @@
 package com.example.newstoday.presentation.theme.home_screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,12 +9,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.newstoday.R
 import com.example.newstoday.domain.model.Article
@@ -35,8 +34,10 @@ import com.example.newstoday.presentation.theme.ui.GreyLight
 @Composable
 fun DetailsNewsScreen(
     article: Article,
-    onBackClick: () -> Unit
+    viewModel: HomeViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
 ) {
+
     Column(Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -48,9 +49,11 @@ fun DetailsNewsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 10.dp, end = 10.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp, end = 10.dp)
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -65,10 +68,12 @@ fun DetailsNewsScreen(
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        viewModel.changeFavoriteStatus(article)
+                    }) {
                         Icon(
                             painter = painterResource(R.drawable.favorite_icon), "",
-                            tint = Color.White,
+                            tint = if (viewModel.isFavoriteCheck(article)) Color.Red else Color.White
                         )
                     }
                 }
@@ -110,9 +115,11 @@ fun DetailsNewsScreen(
                 )
             }
         }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp, start = 20.dp, end = 20.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+        ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Text(
                     "Results",
