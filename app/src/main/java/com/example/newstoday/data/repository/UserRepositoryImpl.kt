@@ -17,7 +17,8 @@ class UserRepositoryImpl @Inject constructor(
         return userDao.getUserById(id)?.toUser()
             ?: User(
                 1,
-                "123@123",
+                "Jonny",
+                "Jonny@123.com",
                 "123",
                 listOf("Random"),
                 emptyList()
@@ -28,6 +29,7 @@ class UserRepositoryImpl @Inject constructor(
         userDao.insertUser(
             UserDBO(
                 user.id,
+                user.name,
                 user.email,
                 user.password,
                 user.favoriteCategories,
@@ -36,7 +38,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserByEmail(email: String): User {
-        return userDao.getUserByEmail(email)?.toUser() ?: User(1, "", "", emptyList(), emptyList())
+        return userDao.getUserByEmail(email)?.toUser() ?: User(1, "", "", "", emptyList(), emptyList())
     }
 
     override suspend fun getAllUser(): List<User> {

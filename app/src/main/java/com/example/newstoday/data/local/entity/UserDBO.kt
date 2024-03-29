@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken
 data class UserDBO(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
+    @ColumnInfo("name") val name: String,
     @ColumnInfo("email") val email: String,
     @ColumnInfo("password") val password: String,
     @ColumnInfo("favoriteCategories") val favoriteCategories: List<String>,
