@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -51,9 +52,10 @@ class HomeViewModel @Inject constructor(
                 _categories.value = emptyList<User>().toImmutableList()
             }
         }
+        observeDatabaseChanges()
     }
 
-    private val selectedCategoryFlow = getArticleByCategoryUseCase(_category.value)
+    private var selectedCategoryFlow = getArticleByCategoryUseCase(_category.value)
     private val favoriteCategoryFlow = getFavoriteCategoriesUseCase(_categories.value[0].favoriteCategories)
 
     var selectedCategoryState = selectedCategoryFlow
@@ -91,6 +93,23 @@ class HomeViewModel @Inject constructor(
 
     fun changeCategory(category: String) {
         _category.value = category
+        viewModelScope.launch {
+            selectedCategoryState = selectedCategoryFlow
+                .map { result ->
+                    when (result) {
+                        is LoadResource.Success -> {
+                            SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
+                        }
+                        is LoadResource.Error -> {
+                            SelectCategoryState.Error
+                        }
+                        is LoadResource.Loading -> {
+                            SelectCategoryState.Loading
+                        }
+                    }
+                }
+                .onStart { emit(SelectCategoryState.Loading) }
+        }
     }
 
     fun isSelectCheck(category: String): Boolean {
@@ -118,6 +137,43 @@ class HomeViewModel @Inject constructor(
                 val update = user.copy(articles = user.articles.plus(article))
                 saveUserUseCase(update)
                 _categories.value = listOf(update).toImmutableList()
+            }
+        }
+    }
+
+    fun searchArticles(query: String) {
+        viewModelScope.launch {
+            val response = getArticleByCategoryUseCase(query)
+            selectedCategoryState = response
+                .map { result ->
+                    when (result) {
+                        is LoadResource.Success -> {
+                            SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
+                        }
+                        is LoadResource.Error -> {
+                            SelectCategoryState.Error
+                        }
+                        is LoadResource.Loading -> {
+                            SelectCategoryState.Loading
+                        }
+                    }
+                }
+                .onStart { emit(SelectCategoryState.Loading) }
+        }
+    }
+
+    private fun observeDatabaseChanges() {
+        viewModelScope.launch {
+            // Пример: ваши базовые функции обновления базы данных
+            while (true) {
+                // Пример: ожидание обновления базы данных
+                delay(1000) // Предположим, что обновление происходит каждую секунду
+
+                // Здесь вы можете вызвать функцию, которая будет получать новые данные из базы данных
+                val updatedUser = getUserByIdUseCase(1)
+
+                // Обновление _categories
+                _categories.value = listOf(updatedUser).toImmutableList()
             }
         }
     }

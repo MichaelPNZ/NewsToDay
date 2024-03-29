@@ -103,7 +103,10 @@ fun HomeScreenContent(
 
         OutlinedTextField(
             value = searchQuery,
-            onValueChange = { searchQuery = it },
+            onValueChange = { newQuery ->
+                searchQuery = newQuery
+                viewModel.searchArticles(newQuery)
+            },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,7 +159,8 @@ fun HomeScreenContent(
         when (val currentState = selectedCategoryState.value) {
             is SelectCategoryState.Initial -> {}
             is SelectCategoryState.Loading -> {
-                Box(modifier = Modifier.fillMaxWidth()
+                Box(modifier = Modifier
+                    .fillMaxWidth()
                     .height(256.dp),
                     contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -164,7 +168,8 @@ fun HomeScreenContent(
             }
 
             is SelectCategoryState.Error -> {
-                Box(modifier = Modifier.fillMaxWidth()
+                Box(modifier = Modifier
+                    .fillMaxWidth()
                     .height(256.dp),
                     contentAlignment = Alignment.Center) {
                     Text(text = "Error")
@@ -199,7 +204,8 @@ fun HomeScreenContent(
         when (val currentFavoriteState = favoriteCategoryState.value) {
             is FavoriteCategoryState.Initial -> {}
             is FavoriteCategoryState.Loading -> {
-                Box(modifier = Modifier.fillMaxWidth()
+                Box(modifier = Modifier
+                    .fillMaxWidth()
                     .height(256.dp),
                     contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -207,7 +213,8 @@ fun HomeScreenContent(
             }
 
             is FavoriteCategoryState.Error -> {
-                Box(modifier = Modifier.fillMaxWidth()
+                Box(modifier = Modifier
+                    .fillMaxWidth()
                     .height(256.dp),
                     contentAlignment = Alignment.Center) {
                     Text(text = "Error")
