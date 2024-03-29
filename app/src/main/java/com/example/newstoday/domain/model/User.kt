@@ -6,4 +6,5 @@ data class User(
     val email: String,
     val password: String,
     val favoriteCategories: List<String>,
+    val articles: List<Article>,
 )

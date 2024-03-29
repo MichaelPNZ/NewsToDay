@@ -5,17 +5,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("everything?q=world&sortBy=popularity")
+    @GET("everything?q=world")
     suspend fun getCategories(): ArticlesResponse
 
     @GET("everything")
     suspend fun getCategory(@Query("q") category: String): ArticlesResponse
-
-    @GET("everything")
-    suspend fun getSelectedCategories(
-        @Query("q") categories: List<String>,
-        @Query("sortBy") sortBy: String = "popularity"
-    ): ArticlesResponse
 
     @GET("everything")
     suspend fun getFavoriteCategories(
