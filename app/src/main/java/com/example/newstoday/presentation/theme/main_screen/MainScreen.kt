@@ -73,7 +73,9 @@ fun Navigation(navController: NavHostController) {
             val article =
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
                     ?: Article(Source("", ""), "", "", "", "", "", "", "")
-            DetailsNewsScreen(article)
+            DetailsNewsScreen(article){
+                navController.navigate(NavigationItem.Home.route)
+            }
         }
     }
 }
