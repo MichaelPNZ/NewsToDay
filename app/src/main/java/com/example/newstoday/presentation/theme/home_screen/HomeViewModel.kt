@@ -18,6 +18,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -143,22 +144,6 @@ class HomeViewModel @Inject constructor(
 
     fun searchArticles(query: String) {
         viewModelScope.launch {
-            val response = getArticleByCategoryUseCase(query)
-            selectedCategoryState = response
-                .map { result ->
-                    when (result) {
-                        is LoadResource.Success -> {
-                            SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
-                        }
-                        is LoadResource.Error -> {
-                            SelectCategoryState.Error
-                        }
-                        is LoadResource.Loading -> {
-                            SelectCategoryState.Loading
-                        }
-                    }
-                }
-                .onStart { emit(SelectCategoryState.Loading) }
         }
     }
 

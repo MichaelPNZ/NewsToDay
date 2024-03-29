@@ -17,7 +17,7 @@ import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.navigation.NavigationObject
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
-import com.example.newstoday.presentation.theme.home_screen.DetailsNewsScreen
+import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.PersonalAccountScreen

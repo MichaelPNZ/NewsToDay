@@ -1,4 +1,4 @@
-package com.example.newstoday.presentation.theme.home_screen
+package com.example.newstoday.presentation.theme.detail_news_screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
