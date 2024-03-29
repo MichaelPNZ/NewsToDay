@@ -29,11 +29,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.newstoday.R
 import com.example.newstoday.domain.model.Article
+import com.example.newstoday.presentation.theme.ui.GreyDark
 import com.example.newstoday.presentation.theme.ui.GreyLight
 
 @Composable
-fun DetailsNewsScreen(article: Article,
-                      onBackClick:()->Unit) {
+fun DetailsNewsScreen(
+    article: Article,
+    onBackClick: () -> Unit
+) {
     Column(Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -45,7 +48,9 @@ fun DetailsNewsScreen(article: Article,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Column(modifier = Modifier.fillMaxSize().padding(start = 10.dp, end = 10.dp)) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 10.dp, end = 10.dp)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -53,7 +58,7 @@ fun DetailsNewsScreen(article: Article,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    IconButton(onClick = {onBackClick()}) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_arrow_back_24),
                             "",
@@ -67,14 +72,16 @@ fun DetailsNewsScreen(article: Article,
                         )
                     }
                 }
-                Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     IconButton(onClick = {}) {
                         Icon(
                             painterResource(R.drawable.share_arrows), "",
                             tint = Color.White,
 
-                        )
+                            )
                     }
                 }
             }
@@ -102,8 +109,18 @@ fun DetailsNewsScreen(article: Article,
                     color = GreyLight
                 )
             }
-
-
+        }
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp, start = 20.dp, end = 20.dp)) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    "Results",
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(article.content, fontSize = 16.sp, color = GreyDark)
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ package com.example.newstoday.presentation.theme.home_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,6 +88,7 @@ fun HomeScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             "Browse",
@@ -238,10 +240,6 @@ fun NewsList(
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-    ) {
         LazyRow(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -256,7 +254,7 @@ fun NewsList(
             }
         }
     }
-}
+
 
 @Composable
 fun NewsItems(
