@@ -9,5 +9,6 @@ fun UserDBO.toUser() = User(
     email = email,
     password = password,
     favoriteCategories = favoriteCategories,
-    articles = articles
+    articles = articles,
+    isLogin = isLogin,
 )

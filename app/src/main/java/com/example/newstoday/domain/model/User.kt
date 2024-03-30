@@ -8,4 +8,5 @@ data class User(
     val password: String,
     val favoriteCategories: List<String>,
     val articles: List<Article>,
+    val isLogin: Boolean,
 )

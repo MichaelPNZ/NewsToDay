@@ -18,6 +18,9 @@ interface UsersDao {
     @Query("SELECT * FROM userdbo WHERE email = :email")
     suspend fun getUserByEmail(email: String): UserDBO?
 
+    @Query("SELECT * FROM userdbo WHERE isLogin = 1")
+    suspend fun getIsLoginUser(): UserDBO?
+
     @Query("SELECT * FROM userdbo")
     suspend fun getAllUser(): List<UserDBO>?
 }

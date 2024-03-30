@@ -39,7 +39,8 @@ class LoginScreenViewModel @Inject constructor(
                     email = email,
                     password = password,
                     favoriteCategories = emptyList(),
-                    articles = emptyList()
+                    articles = emptyList(),
+                    isLogin = true
                 ))
         }
     }

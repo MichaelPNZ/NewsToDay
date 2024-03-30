@@ -21,7 +21,8 @@ class UserRepositoryImpl @Inject constructor(
                 "Jonny@123.com",
                 "123",
                 listOf("Random"),
-                emptyList()
+                emptyList(),
+                false
             )
     }
 
@@ -33,12 +34,19 @@ class UserRepositoryImpl @Inject constructor(
                 user.email,
                 user.password,
                 user.favoriteCategories,
-                user.articles
+                user.articles,
+                user.isLogin
             ))
     }
 
     override suspend fun getUserByEmail(email: String): User {
-        return userDao.getUserByEmail(email)?.toUser() ?: User(1, "", "", "", emptyList(), emptyList())
+        return userDao.getUserByEmail(email)?.toUser()
+            ?: User(1, "", "", "", listOf("Random"), emptyList(), false)
+    }
+
+    override suspend fun getIsLoginUser(): User {
+        return userDao.getIsLoginUser()?.toUser()
+            ?: User(1, "", "", "", listOf("Random"), emptyList(), false)
     }
 
     override suspend fun getAllUser(): List<User> {
