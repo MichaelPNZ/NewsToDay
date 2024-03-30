@@ -4,16 +4,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.newstoday.domain.model.Article
 import com.example.newstoday.domain.model.Source
-import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.navigation.BottomNavigationBar
+import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.navigation.NavigationObject
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
@@ -27,15 +32,20 @@ import com.example.newstoday.presentation.theme.ui.NewsToDayTheme
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val items = listOf(
-        NavigationItem.Home,
-        NavigationItem.Category,
-        NavigationItem.Favorite,
-        NavigationItem.Account
-    )
+    var showBottomBar by rememberSaveable { mutableStateOf(true) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    showBottomBar = when (navBackStackEntry?.destination?.route) {
+        "home" -> true
+        "category" -> true
+        "favorite" -> true
+        "account" -> true
+        else -> false
+    }
+
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController)
+             if (showBottomBar) BottomNavigationBar(navController)
         },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
