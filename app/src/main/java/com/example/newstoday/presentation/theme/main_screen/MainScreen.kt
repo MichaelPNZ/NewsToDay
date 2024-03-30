@@ -17,9 +17,9 @@ import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.navigation.NavigationObject
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
-
 import com.example.newstoday.presentation.theme.home_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
+import com.example.newstoday.presentation.theme.login_screen.LoginScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.PersonalAccountScreen
 import com.example.newstoday.presentation.theme.ui.NewsToDayTheme
@@ -27,9 +27,16 @@ import com.example.newstoday.presentation.theme.ui.NewsToDayTheme
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-
+    val items = listOf(
+        NavigationItem.Home,
+        NavigationItem.Category,
+        NavigationItem.Favorite,
+        NavigationItem.Account
+    )
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) },
+        bottomBar = {
+            BottomNavigationBar(navController)
+        },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
                 Navigation(navController = navController)
@@ -40,7 +47,12 @@ fun MainScreen() {
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationItem.Home.route) {
+    NavHost(navController, startDestination = NavigationObject.LoginScreen.route) {
+        composable(NavigationObject.LoginScreen.route) {
+            LoginScreen {
+                navController.navigate(NavigationItem.Home.route)
+            }
+        }
         composable(NavigationItem.Home.route) {
             HomeScreen {
                 navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
