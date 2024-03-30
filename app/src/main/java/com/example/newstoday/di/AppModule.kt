@@ -58,7 +58,7 @@ object AppModule {
                 val original = chain.request()
                 val request = original.newBuilder()
                     .method(original.method, original.body)
-                    .addHeader("X-Api-Key", "a03810b88e4e4495bd3458fc7a4fd818")
+                    .addHeader("X-Api-Key", "fed1ba2a0ab14db4b10e0c05339ed2c1")
                     .build()
                 chain.proceed(request)
             }

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import com.example.newstoday.domain.model.Article
-import com.example.newstoday.domain.model.User
 import com.example.newstoday.domain.usecases.GetArticleByCategoryUseCase
 import com.example.newstoday.domain.usecases.GetFavoriteCategoriesUseCase
 import com.example.newstoday.domain.usecases.GetUserByIdUseCase
@@ -18,7 +17,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -34,83 +33,70 @@ class HomeViewModel @Inject constructor(
     val imageLoader: ImageLoader,
 ) : ViewModel() {
 
-    private val _categories: MutableState<ImmutableList<User>> =
+    private val _favoriteList: MutableState<ImmutableList<Article>> =
         mutableStateOf(persistentListOf())
-    val categories: State<ImmutableList<User>> = _categories
+    val favoriteList: State<ImmutableList<Article>> = _favoriteList
 
     private val _category: MutableState<String> =
         mutableStateOf(String())
     val category: State<String> = _category
+
+    private val _favoriteCategoryList: MutableState<ImmutableList<String>> =
+        mutableStateOf(persistentListOf())
+    val favoriteCategoryList: State<ImmutableList<String>> = _favoriteCategoryList
 
     init {
         runBlocking  {
             val user = getUserByIdUseCase(1)
             if (user.favoriteCategories.isNotEmpty()) {
                 _category.value = user.favoriteCategories.first()
-                _categories.value = listOf(user).toImmutableList()
+                _favoriteList.value = user.articles.toImmutableList()
+                _favoriteCategoryList.value = user.favoriteCategories.toImmutableList()
             } else {
                 _category.value = "Random"
-                _categories.value = emptyList<User>().toImmutableList()
             }
         }
         observeDatabaseChanges()
     }
 
-    private var selectedCategoryFlow = getArticleByCategoryUseCase(_category.value)
-    private val favoriteCategoryFlow = getFavoriteCategoriesUseCase(_categories.value[0].favoriteCategories)
-
-    var selectedCategoryState = selectedCategoryFlow
-        .map { result ->
-            when (result) {
-                is LoadResource.Success -> {
-                    SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
-                }
-                is LoadResource.Error -> {
-                    SelectCategoryState.Error
-                }
-                is LoadResource.Loading -> {
-                    SelectCategoryState.Loading
-                }
-            }
-        }
-        .onStart { emit(SelectCategoryState.Loading) }
-
-    val favoriteCategoryState = favoriteCategoryFlow
-        .map { result ->
-            when (result) {
-                is LoadResource.Success -> {
-                    FavoriteCategoryState.FavoriteCategory(favoriteCategoryList = result.data?.toImmutableList())
-                }
-                is LoadResource.Error -> {
-                    FavoriteCategoryState.Error
-                }
-                is LoadResource.Loading -> {
-                    FavoriteCategoryState.Loading
+    fun selectedCategoryState(): Flow<SelectCategoryState> {
+        return getArticleByCategoryUseCase(_category.value)
+            .map { result ->
+                when (result) {
+                    is LoadResource.Success -> {
+                        SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
+                    }
+                    is LoadResource.Error -> {
+                        SelectCategoryState.Error
+                    }
+                    is LoadResource.Loading -> {
+                        SelectCategoryState.Loading
+                    }
                 }
             }
-        }
-        .onStart { emit(FavoriteCategoryState.Loading) }
+            .onStart { emit(SelectCategoryState.Loading) }
+    }
 
+    fun favoriteCategoryState(): Flow<FavoriteCategoryState> {
+        return getFavoriteCategoriesUseCase(_favoriteCategoryList.value)
+            .map { result ->
+                when (result) {
+                    is LoadResource.Success -> {
+                        FavoriteCategoryState.FavoriteCategory(favoriteCategoryList = result.data?.toImmutableList())
+                    }
+                    is LoadResource.Error -> {
+                        FavoriteCategoryState.Error
+                    }
+                    is LoadResource.Loading -> {
+                        FavoriteCategoryState.Loading
+                    }
+                }
+            }
+            .onStart { emit(FavoriteCategoryState.Loading) }
+    }
 
     fun changeCategory(category: String) {
         _category.value = category
-        viewModelScope.launch {
-            selectedCategoryState = selectedCategoryFlow
-                .map { result ->
-                    when (result) {
-                        is LoadResource.Success -> {
-                            SelectCategoryState.SelectCategory(selectedCategoryList = result.data?.toImmutableList())
-                        }
-                        is LoadResource.Error -> {
-                            SelectCategoryState.Error
-                        }
-                        is LoadResource.Loading -> {
-                            SelectCategoryState.Loading
-                        }
-                    }
-                }
-                .onStart { emit(SelectCategoryState.Loading) }
-        }
     }
 
     fun isSelectCheck(category: String): Boolean {
@@ -118,9 +104,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun isFavoriteCheck(article: Article): Boolean {
-        return if (_categories.value[0].articles.isEmpty()) {
+        return if (_favoriteList.value.isEmpty()) {
             false
-        } else if (_categories.value[0].articles.contains(article)) {
+        } else if (_favoriteList.value.contains(article)) {
             true
         } else {
             false
@@ -130,35 +116,28 @@ class HomeViewModel @Inject constructor(
     fun changeFavoriteStatus(article: Article) {
         viewModelScope.launch {
             val user = getUserByIdUseCase(1)
-            if (user.articles.contains(article)) {
+            if (user.articles.contains(article) && _favoriteList.value.contains(article)) {
                 val update = user.copy(articles = user.articles.minus(article))
                 saveUserUseCase(update)
-                _categories.value = listOf(update).toImmutableList()
+                _favoriteList.value = _favoriteList.value.minus(article).toImmutableList()
             } else {
                 val update = user.copy(articles = user.articles.plus(article))
                 saveUserUseCase(update)
-                _categories.value = listOf(update).toImmutableList()
+                _favoriteList.value = _favoriteList.value.plus(article).toImmutableList()
             }
         }
     }
 
     fun searchArticles(query: String) {
-        viewModelScope.launch {
-        }
+        _category.value = query
     }
 
     private fun observeDatabaseChanges() {
         viewModelScope.launch {
-            // Пример: ваши базовые функции обновления базы данных
             while (true) {
-                // Пример: ожидание обновления базы данных
-                delay(1000) // Предположим, что обновление происходит каждую секунду
-
-                // Здесь вы можете вызвать функцию, которая будет получать новые данные из базы данных
+                delay(1000)
                 val updatedUser = getUserByIdUseCase(1)
-
-                // Обновление _categories
-                _categories.value = listOf(updatedUser).toImmutableList()
+               _favoriteCategoryList.value = updatedUser.favoriteCategories.toImmutableList()
             }
         }
     }

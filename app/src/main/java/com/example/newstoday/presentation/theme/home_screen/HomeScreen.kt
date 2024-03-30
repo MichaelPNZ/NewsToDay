@@ -4,7 +4,6 @@ package com.example.newstoday.presentation.theme.home_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -63,9 +63,9 @@ fun HomeScreen(
     navigateToDetail: (Article) -> Unit,
 ) {
     val selectedCategoryState =
-        viewModel.selectedCategoryState.collectAsStateWithLifecycle(SelectCategoryState.Initial)
+        viewModel.selectedCategoryState().collectAsStateWithLifecycle(SelectCategoryState.Initial)
     val favoriteCategoryState =
-        viewModel.favoriteCategoryState.collectAsStateWithLifecycle(FavoriteCategoryState.Initial)
+        viewModel.favoriteCategoryState().collectAsStateWithLifecycle(FavoriteCategoryState.Initial)
 
     HomeScreenContent(
         selectedCategoryState = selectedCategoryState,
@@ -132,7 +132,7 @@ fun HomeScreenContent(
         )
 
         LazyRow(modifier = Modifier.padding(top = 20.dp, start = 15.dp)) {
-            items(viewModel.categories.value[0].favoriteCategories) { category ->
+            items(viewModel.favoriteCategoryList.value) { category ->
                 Button(
                     onClick = {
                         viewModel.changeCategory(category)
@@ -240,20 +240,20 @@ fun NewsList(
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
-        LazyRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            news?.let {
-                items(items = news) {
-                    NewsItems(
-                        article = it,
-                        viewModel = viewModel,
-                        navigateToDetail
-                    )
-                }
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        news?.let {
+            items(items = news) {
+                NewsItems(
+                    article = it,
+                    viewModel = viewModel,
+                    navigateToDetail
+                )
             }
         }
     }
+}
 
 
 @Composable

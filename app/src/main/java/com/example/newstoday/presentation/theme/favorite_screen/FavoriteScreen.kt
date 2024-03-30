@@ -46,7 +46,7 @@ fun FavoriteScreen(
     navigateToDetail: (Article) -> Unit,
 ) {
     val favoriteNewsCount = remember {
-        mutableIntStateOf(homeViewModel.categories.value[0].articles.size)
+        mutableIntStateOf(homeViewModel.favoriteList.value.size)
     }
     Column(
         modifier = Modifier
@@ -92,8 +92,8 @@ fun SavedNews(
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(homeViewModel.categories.value[0].articles.size) { index ->
-            val news = homeViewModel.categories.value[0].articles[index]
+        items(homeViewModel.favoriteList.value.size) { index ->
+            val news = homeViewModel.favoriteList.value[index]
             Row(
                 modifier = Modifier
                     .fillMaxSize()
