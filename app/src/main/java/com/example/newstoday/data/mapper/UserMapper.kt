@@ -5,6 +5,7 @@ import com.example.newstoday.domain.model.User
 
 fun UserDBO.toUser() = User(
     id = id,
+    name = name,
     email = email,
     password = password,
     favoriteCategories = favoriteCategories,
