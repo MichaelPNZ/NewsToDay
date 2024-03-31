@@ -9,7 +9,7 @@ import com.example.newstoday.data.local.entity.UserDBO
 
 @Database(
     entities = [UserDBO::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(StringListConverter::class)
