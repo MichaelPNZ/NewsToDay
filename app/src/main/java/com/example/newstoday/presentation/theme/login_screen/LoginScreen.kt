@@ -57,7 +57,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    navigateToOnboarding: () ->Unit
 ) {
 
     var isLogin by rememberSaveable { mutableStateOf(true) }
@@ -93,7 +94,8 @@ fun LoginScreen(
         } else {
             Register(
                 loginScreenViewModel = loginScreenViewModel,
-                navigateToHome = navigateToHome
+                navigateToHome = navigateToHome,
+                navigateToOnboarding = navigateToOnboarding
             )
         }
     }
@@ -173,7 +175,6 @@ fun Login(
             loginScreenViewModel.viewModelScope.launch {
                 if (loginScreenViewModel.checkUser(loginQuery, passwordQuery)) {
                     navigateToHome()
-                    //TODO: navigate to onboarding screen
                 } else {
                     showErrorDialog = true
                 }
@@ -232,6 +233,7 @@ fun Login(
 fun Register(
     loginScreenViewModel: LoginScreenViewModel,
     navigateToHome: () -> Unit,
+    navigateToOnboarding: () -> Unit
 ) {
     var nameQuery by rememberSaveable { mutableStateOf("") }
     var loginQuery by rememberSaveable { mutableStateOf("") }
@@ -327,8 +329,7 @@ fun Register(
             loginScreenViewModel.viewModelScope.launch {
                 if (!loginScreenViewModel.checkUser(loginQuery, passwordQuery)) {
                     loginScreenViewModel.saveUser(nameQuery, loginQuery, passwordQuery)
-                    navigateToHome()
-                    //TODO: navigate to onboarding screen
+                    navigateToOnboarding()
                 } else {
                     showErrorDialog = true
                 }

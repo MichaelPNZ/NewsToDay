@@ -53,7 +53,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalAccountScreen(navigateToLanguageScreen: () ->Unit) {
+fun PersonalAccountScreen(
+    navigateToLanguageScreen: () ->Unit,
+    navigateToLoginScreen: ()->Unit) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     var bottomSheetText by remember { mutableStateOf("") }
@@ -130,7 +132,9 @@ fun PersonalAccountScreen(navigateToLanguageScreen: () ->Unit) {
                             }
                         }
                     )
-                    ButtonGrayWithIcon(text = "Sign Out", icon = Icons.Default.ExitToApp,{})
+                    ButtonGrayWithIcon(text = "Sign Out",
+                        icon = Icons.Default.ExitToApp,
+                        {navigateToLoginScreen()})
                     Spacer(modifier = Modifier.padding(20.dp))
                 }
             }
@@ -175,7 +179,7 @@ fun ButtonGrayWithIcon(text:String,
 @Preview(showBackground = true)
 @Composable
 fun PersonalPreview(){
-    PersonalAccountScreen({})
+    PersonalAccountScreen({},{})
 }
 
 val termsText = "Acceptance of Terms\n" +
