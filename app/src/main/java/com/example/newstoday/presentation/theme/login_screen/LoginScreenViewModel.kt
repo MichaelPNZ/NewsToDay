@@ -2,10 +2,8 @@ package com.example.newstoday.presentation.theme.login_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newstoday.domain.model.Article
 import com.example.newstoday.domain.model.User
 import com.example.newstoday.domain.usecases.GetAllUsersUseCase
-import com.example.newstoday.domain.usecases.GetUserByEmailUseCase
 import com.example.newstoday.domain.usecases.SaveUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -29,9 +27,28 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
+    fun saveIsLoginStatus(email: String) {
+        viewModelScope.launch {
+            val userList = getAllUsersUseCase()
+            val user = userList.find { it.email == email }
+            val otherUsers = userList - user
+            if (user != null) {
+                saveUserUseCase(user.copy(isLogin = true))
+                otherUsers.forEach {
+                    if (it != null) {
+                        saveUserUseCase(it.copy(isLogin = false))
+                    }
+                }
+            }
+        }
+    }
+
     fun saveUser(name: String, email: String, password: String) {
         viewModelScope.launch {
             val userList = getAllUsersUseCase()
+            userList.forEach {
+                saveUserUseCase(it.copy(isLogin = false))
+            }
             saveUserUseCase(
                 User(
                     id = if (userList.isEmpty()) 1 else userList.last().id + 1,

@@ -10,7 +10,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +20,12 @@ import com.example.newstoday.domain.model.Source
 import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.navigation.NavigationObject
+import com.example.newstoday.presentation.theme.category_screen_first_entry.CategoryScreenFirstEntry
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
-import com.example.newstoday.presentation.theme.home_screen.DetailsNewsScreen
+import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
 import com.example.newstoday.presentation.theme.login_screen.LoginScreen
-import com.example.newstoday.presentation.theme.login_screen.Register
 import com.example.newstoday.presentation.theme.onboarding_screen.OnboardingScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.PersonalAccountScreen
@@ -64,39 +63,52 @@ fun Navigation(navController: NavHostController) {
         composable(NavigationObject.LoginScreen.route) {
 
             LoginScreen(
-                navigateToHome = { navController.navigate(NavigationItem.Home.route) }) {
-                navController.navigate("onboarding_screen")
+                navigateToHomeScreen = { navController.navigate(NavigationItem.Home.route) }) {
+                navController.navigate(NavigationObject.OnboardingScreen.route)
             }
         }
+
+        composable(NavigationObject.OnboardingScreen.route){
+            OnboardingScreen {
+                navController.navigate(NavigationObject.CategoryScreenFirstEntry.route)
+            }
+        }
+
+        composable(NavigationObject.CategoryScreenFirstEntry.route) {
+            CategoryScreenFirstEntry {
+                navController.navigate(NavigationItem.Home.route)
+            }
+        }
+
         composable(NavigationItem.Home.route) {
             HomeScreen {
                 navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
                 navController.navigate(NavigationObject.DetailScreen.route)
             }
         }
+
         composable(NavigationItem.Category.route) {
             CategoryScreen()
         }
+
         composable(NavigationItem.Favorite.route) {
             FavoriteScreen {
                 navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
                 navController.navigate(NavigationObject.DetailScreen.route)
             }
         }
-        composable("onboarding_screen"){
-            OnboardingScreen {
-                navController.navigate(NavigationItem.Category.route)
-            }
-        }
+
         composable(NavigationItem.Account.route) {
             PersonalAccountScreen(
                 navigateToLanguageScreen = {navController.navigate("language_screen")} ) {
                 navController.navigate(NavigationObject.LoginScreen.route)
             }
         }
+
         composable("language_screen") {
             LanguageScreen()
         }
+
         composable(NavigationObject.DetailScreen.route) {
             val article =
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")

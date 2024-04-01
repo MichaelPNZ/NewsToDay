@@ -24,7 +24,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,16 +35,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newstoday.R
-import com.example.newstoday.domain.model.Article
-import com.example.newstoday.presentation.theme.ui.GreyDark
-import com.example.newstoday.presentation.theme.ui.GreyLight
 import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
 import com.example.newstoday.presentation.theme.ui.Pink40
@@ -57,10 +52,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
-    navigateToHome: () -> Unit,
-    navigateToOnboarding: () ->Unit
+    navigateToHomeScreen: () -> Unit,
+    navigateToOnboarding: () -> Unit,
 ) {
-
     var isLogin by rememberSaveable { mutableStateOf(true) }
 
     Column(
@@ -89,12 +83,11 @@ fun LoginScreen(
         if (isLogin) {
             Login(
                 loginScreenViewModel = loginScreenViewModel,
-                navigateToHome = navigateToHome
+                navigateToHome = navigateToHomeScreen
             ) { isLogin = false }
         } else {
             Register(
                 loginScreenViewModel = loginScreenViewModel,
-                navigateToHome = navigateToHome,
                 navigateToOnboarding = navigateToOnboarding
             )
         }
@@ -174,6 +167,7 @@ fun Login(
         onClick = {
             loginScreenViewModel.viewModelScope.launch {
                 if (loginScreenViewModel.checkUser(loginQuery, passwordQuery)) {
+                    loginScreenViewModel.saveIsLoginStatus(loginQuery)
                     navigateToHome()
                 } else {
                     showErrorDialog = true
@@ -232,7 +226,6 @@ fun Login(
 @Composable
 fun Register(
     loginScreenViewModel: LoginScreenViewModel,
-    navigateToHome: () -> Unit,
     navigateToOnboarding: () -> Unit
 ) {
     var nameQuery by rememberSaveable { mutableStateOf("") }
