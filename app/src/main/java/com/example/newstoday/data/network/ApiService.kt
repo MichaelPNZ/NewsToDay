@@ -9,7 +9,10 @@ interface ApiService {
     suspend fun getCategories(): ArticlesResponse
 
     @GET("everything")
-    suspend fun getCategory(@Query("q") category: String): ArticlesResponse
+    suspend fun getCategory(
+        @Query("q") category: String,
+        @Query("sortBy") sortBy: String = "popularity"
+    ): ArticlesResponse
 
     @GET("everything")
     suspend fun getFavoriteCategories(

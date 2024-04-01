@@ -37,8 +37,11 @@ import androidx.compose.ui.unit.sp
 import com.example.newstoday.R
 import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OnboardingScreen(navigateToCategoryScreen: ()-> Unit){
+fun OnboardingScreen(
+    navigateToCategoryScreenFirstEntry: () -> Unit,
+) {
     val state = rememberPagerState(pageCount = { images.size })
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -63,7 +66,7 @@ fun OnboardingScreen(navigateToCategoryScreen: ()-> Unit){
         Spacer(modifier = Modifier.padding(30.dp))
         if(state.currentPage == 2){
             Button(onClick = {
-                navigateToCategoryScreen()
+                navigateToCategoryScreenFirstEntry()
             },
                 modifier = Modifier
                     .padding(8.dp)
@@ -144,13 +147,13 @@ fun DotsIndicator(
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardingScreenPreeview(){
-    OnboardingScreen({})
+fun OnboardingScreenPreview(){
+    OnboardingScreen {}
 }
 val images = listOf(
     R.drawable.image_text,
     R.drawable.image_text,
     R.drawable.image_text
 )
-val firstText ="First to know"
-val allText = "All news in one place, be\nthe first to know last news"
+const val firstText ="First to know"
+const val allText = "All news in one place, be\nthe first to know last news"

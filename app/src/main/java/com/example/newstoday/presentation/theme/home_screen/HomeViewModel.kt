@@ -9,7 +9,7 @@ import coil.ImageLoader
 import com.example.newstoday.domain.model.Article
 import com.example.newstoday.domain.usecases.GetArticleByCategoryUseCase
 import com.example.newstoday.domain.usecases.GetFavoriteCategoriesUseCase
-import com.example.newstoday.domain.usecases.GetUserByIdUseCase
+import com.example.newstoday.domain.usecases.GetIsLoginUserUseCase
 import com.example.newstoday.domain.usecases.SaveUserUseCase
 import com.example.newstoday.utils.LoadResource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,9 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val getIsLoginUserUseCase: GetIsLoginUserUseCase,
     private val getArticleByCategoryUseCase: GetArticleByCategoryUseCase,
     private val getFavoriteCategoriesUseCase: GetFavoriteCategoriesUseCase,
-    private val getUserByIdUseCase: GetUserByIdUseCase,
     private val saveUserUseCase: SaveUserUseCase,
     val imageLoader: ImageLoader,
 ) : ViewModel() {
@@ -47,13 +47,11 @@ class HomeViewModel @Inject constructor(
 
     init {
         runBlocking  {
-            val user = getUserByIdUseCase(1)
+            val user = getIsLoginUserUseCase()
             if (user.favoriteCategories.isNotEmpty()) {
                 _category.value = user.favoriteCategories.first()
                 _favoriteList.value = user.articles.toImmutableList()
                 _favoriteCategoryList.value = user.favoriteCategories.toImmutableList()
-            } else {
-                _category.value = "Random"
             }
         }
         observeDatabaseChanges()
@@ -82,7 +80,9 @@ class HomeViewModel @Inject constructor(
             .map { result ->
                 when (result) {
                     is LoadResource.Success -> {
-                        FavoriteCategoryState.FavoriteCategory(favoriteCategoryList = result.data?.toImmutableList())
+                        FavoriteCategoryState.FavoriteCategory(
+                            favoriteCategoryList = result.data?.shuffled()?.toImmutableList()
+                        )
                     }
                     is LoadResource.Error -> {
                         FavoriteCategoryState.Error
@@ -115,8 +115,8 @@ class HomeViewModel @Inject constructor(
 
     fun changeFavoriteStatus(article: Article) {
         viewModelScope.launch {
-            val user = getUserByIdUseCase(1)
-            if (user.articles.contains(article) && _favoriteList.value.contains(article)) {
+            val user = getIsLoginUserUseCase()
+            if (user.articles.contains(article)) {
                 val update = user.copy(articles = user.articles.minus(article))
                 saveUserUseCase(update)
                 _favoriteList.value = _favoriteList.value.minus(article).toImmutableList()
@@ -136,8 +136,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             while (true) {
                 delay(1000)
-                val updatedUser = getUserByIdUseCase(1)
-               _favoriteCategoryList.value = updatedUser.favoriteCategories.toImmutableList()
+                val updatedUser = getIsLoginUserUseCase()
+                _favoriteList.value = updatedUser.articles.toImmutableList()
+                _favoriteCategoryList.value = updatedUser.favoriteCategories.toImmutableList()
             }
         }
     }

@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,7 +30,8 @@ import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @Composable
 fun CategoryScreenFirstEntry(
-    viewModel: CategoryViewModel = hiltViewModel(),
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
+    navigateToHomeScreen: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -63,16 +63,16 @@ fun CategoryScreenFirstEntry(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            items(items = viewModel.categoriesList) { category ->
+            items(items = categoryViewModel.categoriesList) { category ->
                 CategoryItem(
-                    emoji = viewModel.emojiList[viewModel.categoriesList.indexOf(category)],
+                    emoji = categoryViewModel.emojiList[categoryViewModel.categoriesList.indexOf(category)],
                     category = category,
-                    isSelected = viewModel.isSelectCheck(category),
-                    onCategoryClicked = { viewModel.toggleCategory(category) }
+                    isSelected = categoryViewModel.isSelectCheck(category),
+                    onCategoryClicked = { categoryViewModel.toggleCategory(category) }
                 )
             }
         }
-        Button(onClick = {  },
+        Button(onClick = { navigateToHomeScreen() },
             modifier = Modifier
                 .height(56.dp)
                 .fillMaxWidth(),
@@ -88,10 +88,4 @@ fun CategoryScreenFirstEntry(
                 fontWeight = FontWeight.Bold)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CategoryScreenFirstEntryPreview() {
-    CategoryScreenFirstEntry()
 }

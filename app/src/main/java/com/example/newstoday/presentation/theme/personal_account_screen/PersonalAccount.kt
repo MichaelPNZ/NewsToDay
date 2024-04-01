@@ -40,9 +40,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newstoday.R
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
 import com.example.newstoday.presentation.theme.ui.GreyDark
@@ -50,15 +50,17 @@ import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalAccountScreen(
+    personalAccountViewModel: PersonalAccountViewModel = hiltViewModel(),
     navigateToLanguageScreen: () ->Unit,
     navigateToLoginScreen: ()->Unit) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     var bottomSheetText by remember { mutableStateOf("") }
+
+    val viewModel = personalAccountViewModel.user.value ?: return
 
     BottomSheetScaffold(
         sheetContent = {
@@ -100,13 +102,13 @@ fun PersonalAccountScreen(
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
-                        text = "CAT P",
+                        text = viewModel.name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = BlackPrimary
                     )
                     Text(
-                        text = "coolcat@gmail.com",
+                        text = viewModel.email,
                         fontSize = 14.sp,
                         color = GreyPrimary
                     )
@@ -133,8 +135,10 @@ fun PersonalAccountScreen(
                         }
                     )
                     ButtonGrayWithIcon(text = "Sign Out",
-                        icon = Icons.Default.ExitToApp,
-                        {navigateToLoginScreen()})
+                        icon = Icons.Default.ExitToApp
+                    ) {
+                        navigateToLoginScreen()
+                    }
                     Spacer(modifier = Modifier.padding(20.dp))
                 }
             }
@@ -176,13 +180,7 @@ fun ButtonGrayWithIcon(text:String,
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PersonalPreview(){
-    PersonalAccountScreen({},{})
-}
-
-val termsText = "Acceptance of Terms\n" +
+const val termsText = "Acceptance of Terms\n" +
         "By downloading, accessing, or using the news application, you agree to be bound by these Terms and Conditions.\n" +
         "\n" +
         "User Conduct\n" +
