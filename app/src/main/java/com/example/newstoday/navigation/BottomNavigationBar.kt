@@ -38,15 +38,17 @@ fun BottomNavigationBar(navController: NavController) {
                     selectedTextColor = PurplePrimary
                 ),
                 onClick = {
-                    selectedItem = index
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
+                    if (selectedItem != index) {
+                        selectedItem = index
+                        navController.navigate(item.route) {
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
