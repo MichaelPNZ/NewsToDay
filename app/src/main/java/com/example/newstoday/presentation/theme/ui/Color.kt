@@ -24,3 +24,5 @@ val GreyDark = Color(0xFF666C8E)
 val GreyPrimary = Color(0xFF7C82A1)
 val GreyLight = Color(0xFFACAFC3)
 val GreyLighter = Color(0xFFF3F4F6)
+
+val Tomato = Color(0xFFFF7043)

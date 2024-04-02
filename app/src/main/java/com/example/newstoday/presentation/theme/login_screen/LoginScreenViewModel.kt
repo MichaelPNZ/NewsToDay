@@ -17,6 +17,16 @@ class LoginScreenViewModel @Inject constructor(
     private val saveUserUseCase: SaveUserUseCase,
 ) : ViewModel() {
 
+    suspend fun checkGoogleUser(userName: String): Boolean {
+        return suspendCoroutine { continuation ->
+            viewModelScope.launch {
+                val user = getAllUsersUseCase()
+                val isUserExists = user.find { it.name == userName && it.email == "${userName}@gmail.com" } != null
+                continuation.resume(isUserExists)
+            }
+        }
+    }
+
     suspend fun checkUser(email: String, password: String): Boolean {
         return suspendCoroutine { continuation ->
             viewModelScope.launch {
@@ -46,19 +56,19 @@ class LoginScreenViewModel @Inject constructor(
     fun saveUser(name: String, email: String, password: String) {
         viewModelScope.launch {
             val userList = getAllUsersUseCase()
-            userList.forEach {
-                saveUserUseCase(it.copy(isLogin = false))
+            val checkUser = userList.filter { it.email == email }
+            if (checkUser.isEmpty()) {
+                saveUserUseCase(
+                    User(
+                        id = if (userList.isEmpty()) 1 else userList.last().id + 1,
+                        name = name,
+                        email = email,
+                        password = password,
+                        favoriteCategories = emptyList(),
+                        articles = emptyList(),
+                        isLogin = true
+                    ))
             }
-            saveUserUseCase(
-                User(
-                    id = if (userList.isEmpty()) 1 else userList.last().id + 1,
-                    name = name,
-                    email = email,
-                    password = password,
-                    favoriteCategories = emptyList(),
-                    articles = emptyList(),
-                    isLogin = true
-                ))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.newstoday.presentation.theme.login_screen
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +34,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,21 +46,36 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newstoday.R
+import com.example.newstoday.presentation.theme.auth.SignInState
 import com.example.newstoday.presentation.theme.ui.GreyLighter
 import com.example.newstoday.presentation.theme.ui.GreyPrimary
 import com.example.newstoday.presentation.theme.ui.Pink40
 import com.example.newstoday.presentation.theme.ui.PurpleDark
 import com.example.newstoday.presentation.theme.ui.PurpleLight
 import com.example.newstoday.presentation.theme.ui.PurplePrimary
+import com.example.newstoday.presentation.theme.ui.Tomato
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     loginScreenViewModel: LoginScreenViewModel = hiltViewModel(),
+    state: SignInState,
+    onSignInClick: () -> Unit,
     navigateToHomeScreen: () -> Unit,
     navigateToOnboarding: () -> Unit,
 ) {
     var isLogin by rememberSaveable { mutableStateOf(true) }
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -83,7 +103,8 @@ fun LoginScreen(
         if (isLogin) {
             Login(
                 loginScreenViewModel = loginScreenViewModel,
-                navigateToHome = navigateToHomeScreen
+                navigateToHome = navigateToHomeScreen,
+                onSignInClick = onSignInClick,
             ) { isLogin = false }
         } else {
             Register(
@@ -98,6 +119,7 @@ fun LoginScreen(
 fun Login(
     loginScreenViewModel: LoginScreenViewModel,
     navigateToHome: () -> Unit,
+    onSignInClick: () -> Unit,
     onCreateAccountClick: () -> Unit,
 ) {
     var loginQuery by rememberSaveable { mutableStateOf("") }
@@ -187,6 +209,40 @@ fun Login(
             textAlign = TextAlign.Center,
             maxLines = 1
         )
+    }
+
+    Spacer(modifier = Modifier.padding(10.dp))
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(55.dp)
+            .padding(horizontal = 16.dp),
+        onClick = onSignInClick,
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(Tomato),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                imageVector = ImageVector.vectorResource(id = R.drawable.google_icon),
+                contentDescription = null,
+                modifier = Modifier.wrapContentSize())
+
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "Sign in with Google",
+                color = GreyLighter,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+        }
+
     }
 
     Row(

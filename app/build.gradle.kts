@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     id ("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.coil.compose)
     //Hilt
     implementation (libs.hilt.android)
+    implementation(libs.play.services.auth)
     ksp (libs.hilt.compiler)
     ksp (libs.androidx.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
@@ -83,6 +85,8 @@ dependencies {
     //Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.firebase.auth)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
