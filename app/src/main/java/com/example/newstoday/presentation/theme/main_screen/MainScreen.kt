@@ -20,11 +20,13 @@ import com.example.newstoday.domain.model.Source
 import com.example.newstoday.navigation.BottomNavigationBar
 import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.navigation.NavigationObject
+import com.example.newstoday.presentation.theme.Recommended_Screen.RecScreen
 import com.example.newstoday.presentation.theme.category_screen_first_entry.CategoryScreenFirstEntry
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
+import com.example.newstoday.presentation.theme.home_screen.recList
 import com.example.newstoday.presentation.theme.login_screen.LoginScreen
 import com.example.newstoday.presentation.theme.onboarding_screen.OnboardingScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
@@ -47,7 +49,7 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-             if (showBottomBar) BottomNavigationBar(navController)
+            if (showBottomBar) BottomNavigationBar(navController)
         },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
@@ -68,7 +70,7 @@ fun Navigation(navController: NavHostController) {
             }
         }
 
-        composable(NavigationObject.OnboardingScreen.route){
+        composable(NavigationObject.OnboardingScreen.route) {
             OnboardingScreen {
                 navController.navigate(NavigationObject.CategoryScreenFirstEntry.route)
             }
@@ -81,12 +83,16 @@ fun Navigation(navController: NavHostController) {
         }
 
         composable(NavigationItem.Home.route) {
-            HomeScreen {
+            HomeScreen(navigateToDetail = {
                 navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
                 navController.navigate(NavigationObject.DetailScreen.route)
-            }
+            },
+                navigateToDetail2 = {
+                    navController.currentBackStackEntry?.savedStateHandle?.set("qq", it)
+                    navController.navigate(NavigationObject.RecommendedScreen.route)
+                }
+            )
         }
-
         composable(NavigationItem.Category.route) {
             CategoryScreen()
         }
@@ -100,7 +106,7 @@ fun Navigation(navController: NavHostController) {
 
         composable(NavigationItem.Account.route) {
             PersonalAccountScreen(
-                navigateToLanguageScreen = {navController.navigate("language_screen")} ) {
+                navigateToLanguageScreen = { navController.navigate("language_screen") }) {
                 navController.navigate(NavigationObject.LoginScreen.route)
             }
         }
@@ -113,10 +119,23 @@ fun Navigation(navController: NavHostController) {
             val article =
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
                     ?: Article(Source("", ""), "", "", "", "", "", "", "")
-            DetailsNewsScreen(article){
+            DetailsNewsScreen(article) {
                 navController.navigate(NavigationItem.Home.route)
             }
         }
+        composable(NavigationObject.RecommendedScreen.route) {
+            val articles =
+                navController.previousBackStackEntry?.savedStateHandle?.get<recList>("qq")
+            if (articles != null) {
+                RecScreen(articles){
+                    navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
+                    navController.navigate(NavigationObject.DetailScreen.route)
+
+                }
+            }
+
+        }
+
     }
 }
 

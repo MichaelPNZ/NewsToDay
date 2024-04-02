@@ -14,4 +14,5 @@ sealed class NavigationObject(val route: String) {
     data object LoginScreen : NavigationObject("LoginScreen")
     data object CategoryScreenFirstEntry : NavigationObject("CategoryScreenFirstEntry")
     data object OnboardingScreen : NavigationObject("OnboardingScreen")
+    data object RecommendedScreen : NavigationObject("RecommendedScreen")
 }

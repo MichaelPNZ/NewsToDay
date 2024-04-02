@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -61,6 +60,7 @@ import kotlinx.collections.immutable.toImmutableList
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToDetail: (Article) -> Unit,
+    navigateToDetail2: (recList) -> Unit,
 ) {
     val selectedCategoryState =
         viewModel.selectedCategoryState().collectAsStateWithLifecycle(SelectCategoryState.Initial)
@@ -71,7 +71,9 @@ fun HomeScreen(
         selectedCategoryState = selectedCategoryState,
         favoriteCategoryState = favoriteCategoryState,
         viewModel = viewModel,
-        navigateToDetail = navigateToDetail
+        navigateToDetail = navigateToDetail,
+        navigateToDetail2 = navigateToDetail2
+
     )
 }
 
@@ -81,6 +83,7 @@ fun HomeScreenContent(
     favoriteCategoryState: State<FavoriteCategoryState>,
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit,
+    navigateToDetail2: (recList) -> Unit,
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
 
@@ -128,7 +131,7 @@ fun HomeScreenContent(
                 errorContainerColor = Color.Transparent,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
-                )
+            )
         )
 
         LazyRow(modifier = Modifier.padding(top = 20.dp, start = 15.dp)) {
@@ -161,19 +164,23 @@ fun HomeScreenContent(
         when (val currentState = selectedCategoryState.value) {
             is SelectCategoryState.Initial -> {}
             is SelectCategoryState.Loading -> {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(256.dp),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(256.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             }
 
             is SelectCategoryState.Error -> {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(256.dp),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(256.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(text = "Error")
                 }
             }
@@ -187,47 +194,58 @@ fun HomeScreenContent(
         }
 
         Spacer(modifier = Modifier.padding(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                "Recommended for you",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 20.dp)
-            )
-            Text(
-                "See All",
-                fontSize = 14.sp,
-                color = GreyPrimary,
-                modifier = Modifier.padding(end = 20.dp)
-            )
-        }
 
-        Spacer(modifier = Modifier.padding(16.dp))
         when (val currentFavoriteState = favoriteCategoryState.value) {
             is FavoriteCategoryState.Initial -> {}
             is FavoriteCategoryState.Loading -> {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(256.dp),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(256.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             }
 
             is FavoriteCategoryState.Error -> {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(256.dp),
-                    contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(256.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(text = "Error")
                 }
             }
 
             is FavoriteCategoryState.FavoriteCategory -> {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        "Recommended for you",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 20.dp)
+                    )
+                    Text(
+                        "See All",
+                        fontSize = 14.sp,
+                        color = GreyPrimary,
+                        modifier = Modifier
+                            .padding(end = 20.dp)
+                            .clickable {
+                                var recList = recList(currentFavoriteState.favoriteCategoryList!!.filter { it.urlToImage.isNotEmpty() }
+                                    .toList())
+                                navigateToDetail2(recList)
+                            }
+                    )
+                }
+                Spacer(modifier = Modifier.padding(16.dp))
                 NewsList(currentFavoriteState.favoriteCategoryList?.filter { it.urlToImage.isNotEmpty() }
                     ?.toImmutableList(),
                     viewModel = viewModel,
-                    navigateToDetail
+                    navigateToDetail,
+
                 )
             }
         }
@@ -238,13 +256,16 @@ fun HomeScreenContent(
 fun NewsList(
     news: ImmutableList<Article>?,
     viewModel: HomeViewModel,
-    navigateToDetail: (Article) -> Unit
+    navigateToDetail: (Article) -> Unit,
+
 ) {
+
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
     ) {
         news?.let {
             items(items = news) {
+
                 NewsItems(
                     article = it,
                     viewModel = viewModel,
