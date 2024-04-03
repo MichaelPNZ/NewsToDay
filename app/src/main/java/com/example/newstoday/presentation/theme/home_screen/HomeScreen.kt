@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -60,7 +64,7 @@ import kotlinx.collections.immutable.toImmutableList
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToDetail: (Article) -> Unit,
-    navigateToDetail2: (recList) -> Unit,
+    navigateToDetail2: (List<Article>) -> Unit,
 ) {
     val selectedCategoryState =
         viewModel.selectedCategoryState().collectAsStateWithLifecycle(SelectCategoryState.Initial)
@@ -83,9 +87,10 @@ fun HomeScreenContent(
     favoriteCategoryState: State<FavoriteCategoryState>,
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit,
-    navigateToDetail2: (recList) -> Unit,
+    navigateToDetail2: (List<Article>) -> Unit,
 ) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    var recList = emptyList<Article>()
 
     Column(
         modifier = Modifier
@@ -97,7 +102,7 @@ fun HomeScreenContent(
             "Browse",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 16.dp, start = 20.dp),
+            modifier = Modifier.padding(top = 72.dp, start = 20.dp),
             lineHeight = 32.sp
         )
         Text(
@@ -192,9 +197,27 @@ fun HomeScreenContent(
                     navigateToDetail)
             }
         }
+        Spacer(modifier = Modifier.padding(20.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                "Recommended for you",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 20.dp)
+            )
+            Text(
+                "See All",
+                fontSize = 14.sp,
+                color = GreyPrimary,
+                modifier = Modifier
+                    .padding(end = 20.dp)
+                    .clickable {
+                        navigateToDetail2(recList)
+                    }
+            )
+        }
 
-        Spacer(modifier = Modifier.padding(16.dp))
-
+        Spacer(modifier = Modifier.padding(14.dp))
         when (val currentFavoriteState = favoriteCategoryState.value) {
             is FavoriteCategoryState.Initial -> {}
             is FavoriteCategoryState.Loading -> {
@@ -220,33 +243,12 @@ fun HomeScreenContent(
             }
 
             is FavoriteCategoryState.FavoriteCategory -> {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(
-                        "Recommended for you",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 20.dp)
-                    )
-                    Text(
-                        "See All",
-                        fontSize = 14.sp,
-                        color = GreyPrimary,
-                        modifier = Modifier
-                            .padding(end = 20.dp)
-                            .clickable {
-                                var recList = recList(currentFavoriteState.favoriteCategoryList!!.filter { it.urlToImage.isNotEmpty() }
-                                    .toList())
-                                navigateToDetail2(recList)
-                            }
-                    )
+                val data =
+                    currentFavoriteState.favoriteCategoryList?.filter { it.urlToImage.isNotEmpty() }
+                if (data != null) {
+                    recList = data
                 }
-                Spacer(modifier = Modifier.padding(16.dp))
-                NewsList(currentFavoriteState.favoriteCategoryList?.filter { it.urlToImage.isNotEmpty() }
-                    ?.toImmutableList(),
-                    viewModel = viewModel,
-                    navigateToDetail,
-
-                )
+                RecommendItem(data, viewModel, navigateToDetail)
             }
         }
     }
@@ -257,9 +259,7 @@ fun NewsList(
     news: ImmutableList<Article>?,
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit,
-
 ) {
-
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -319,13 +319,14 @@ fun NewsItems(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(25.dp)
                     .align(Alignment.BottomStart),
             ) {
                 Text(
-                    text = article.author,
+                    text = viewModel.category.value,
                     fontSize = 16.sp,
-                    color = Color.White
+                    color = Color.White,
+                    lineHeight = 24.sp,
                 )
                 Text(
                     text = article.title,
@@ -333,12 +334,50 @@ fun NewsItems(
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
-                Text(
-                    text = article.source.name,
-                    fontSize = 14.sp,
-                    color = Color.White
-                )
             }
         }
     }
+}
+
+@Composable
+fun RecommendItem(
+    data: List<Article>?,
+    viewModel: HomeViewModel,
+    navigateToDetail: (Article) -> Unit
+) {
+    repeat(3) { item ->
+        data?.let {
+            Card(modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 20.dp, end = 20.dp, bottom = 10.dp)
+                .clickable { navigateToDetail(data[item]) },
+                colors = CardDefaults.cardColors(containerColor = Color.White)) {
+                Row(
+                ) {
+                    AsyncImage(
+                        data[item].urlToImage, "",
+                        modifier = Modifier
+                            .size(96.dp, 96.dp)
+                            .clip(RoundedCornerShape(15.dp)),
+                        contentScale = ContentScale.Crop,
+                    )
+                    Column(modifier = Modifier.padding(start = 15.dp)) {
+                        Text(
+                            viewModel.category.value, fontSize = 14.sp,
+                            color = GreyPrimary,
+                            lineHeight = 20.sp,
+                        )
+                        Text(
+                            data[item].title + ".....",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            maxLines = 3
+                        )
+                    }
+                }
+            }
+        }
+    }
+
 }

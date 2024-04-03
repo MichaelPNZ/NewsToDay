@@ -26,7 +26,6 @@ import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryS
 import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
-import com.example.newstoday.presentation.theme.home_screen.recList
 import com.example.newstoday.presentation.theme.login_screen.LoginScreen
 import com.example.newstoday.presentation.theme.onboarding_screen.OnboardingScreen
 import com.example.newstoday.presentation.theme.personal_account_screen.LanguageScreen
@@ -125,7 +124,7 @@ fun Navigation(navController: NavHostController) {
         }
         composable(NavigationObject.RecommendedScreen.route) {
             val articles =
-                navController.previousBackStackEntry?.savedStateHandle?.get<recList>("qq")
+                navController.previousBackStackEntry?.savedStateHandle?.get<List<Article>>("qq")
             if (articles != null) {
                 RecScreen(articles){
                     navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
