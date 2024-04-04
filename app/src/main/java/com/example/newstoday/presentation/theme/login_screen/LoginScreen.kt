@@ -307,7 +307,8 @@ fun Register(
         OutlinedTextField(
             value = nameQuery,
             onValueChange = { nameQuery = it
-                            isErrorName =false},
+                isErrorName = nameQuery.isNotEmpty() && nameQuery.first().isLowerCase()
+            },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -329,7 +330,7 @@ fun Register(
                 focusedContainerColor = GreyLighter,
                 unfocusedContainerColor = GreyLighter,
                 disabledContainerColor = GreyLighter,
-                errorContainerColor = Color.Transparent,
+                errorContainerColor = MaterialTheme.colorScheme.errorContainer,
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
             )
