@@ -23,8 +23,8 @@ import com.example.newstoday.navigation.NavigationObject
 import com.example.newstoday.presentation.theme.Recommended_Screen.RecScreen
 import com.example.newstoday.presentation.theme.category_screen_first_entry.CategoryScreenFirstEntry
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
-import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
+import com.example.newstoday.presentation.theme.favorite_screen.FavoriteScreen
 import com.example.newstoday.presentation.theme.home_screen.HomeScreen
 import com.example.newstoday.presentation.theme.login_screen.LoginScreen
 import com.example.newstoday.presentation.theme.onboarding_screen.OnboardingScreen
@@ -83,7 +83,7 @@ fun Navigation(navController: NavHostController) {
 
         composable(NavigationItem.Home.route) {
             HomeScreen(navigateToDetail = {
-                navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
+                navController .currentBackStackEntry?.savedStateHandle?.set("dd", it)
                 navController.navigate(NavigationObject.DetailScreen.route)
             },
                 navigateToDetail2 = {
@@ -119,7 +119,7 @@ fun Navigation(navController: NavHostController) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
                     ?: Article(Source("", ""), "", "", "", "", "", "", "")
             DetailsNewsScreen(article) {
-                navController.navigate(NavigationItem.Home.route)
+                navController.popBackStack()
             }
         }
         composable(NavigationObject.RecommendedScreen.route) {
