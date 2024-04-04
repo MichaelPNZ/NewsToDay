@@ -7,7 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -27,6 +32,7 @@ import com.example.newstoday.domain.model.Article
 import com.example.newstoday.presentation.theme.home_screen.HomeViewModel
 import com.example.newstoday.presentation.theme.ui.GreyDark
 import com.example.newstoday.presentation.theme.ui.GreyLight
+import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @Composable
 fun DetailsNewsScreen(
@@ -91,14 +97,19 @@ fun DetailsNewsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(20.dp)
                     .align(Alignment.BottomStart),
             ) {
+                Button({}, modifier = Modifier.height(32.dp),
+                    colors = ButtonDefaults.buttonColors(PurplePrimary)) {
+                    Text(viewModel.category.value, fontSize = 12.sp )
+                }
                 Text(
                     text = article.title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 20.dp,top = 15.dp)
                 )
                 Text(
                     text = article.author,
@@ -106,7 +117,7 @@ fun DetailsNewsScreen(
                     color = Color.White
                 )
                 Text(
-                    text = article.source.name,
+                    text = "Author",
                     fontSize = 14.sp,
                     color = GreyLight
                 )
@@ -129,7 +140,4 @@ fun DetailsNewsScreen(
     }
 }
 
-@Composable
-fun DetailNewsPreview() {
 
-}
