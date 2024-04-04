@@ -36,10 +36,12 @@ fun CategoryScreenFirstEntry(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(Color.White),
     ) {
         Text(
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
+                .fillMaxWidth(),
             text = "Select your favorite topics",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.SemiBold,
@@ -48,7 +50,8 @@ fun CategoryScreenFirstEntry(
         )
         Text(
             modifier = Modifier
-                .padding(vertical = 8.dp),
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
             text = "Select some of your favorite topics to let us suggest better news for you.",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Normal,
@@ -58,7 +61,7 @@ fun CategoryScreenFirstEntry(
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -75,6 +78,7 @@ fun CategoryScreenFirstEntry(
         Button(onClick = { navigateToHomeScreen() },
             modifier = Modifier
                 .height(56.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonColors(

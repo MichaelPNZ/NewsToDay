@@ -51,8 +51,7 @@ fun FavoriteScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .background(color = Color.White)
+            .background(Color.White)
     ) {
         Text(
             text = "Bookmarks", style = TextStyle(
@@ -61,6 +60,7 @@ fun FavoriteScreen(
                 lineHeight = 32.sp
             ),
             modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
                 .fillMaxWidth()
         )
         Text(
@@ -71,7 +71,7 @@ fun FavoriteScreen(
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
         )
         if (favoriteNewsCount.intValue > 0) {
             SavedNews(
@@ -89,7 +89,8 @@ fun SavedNews(
 ) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(homeViewModel.favoriteList.value.size) { index ->

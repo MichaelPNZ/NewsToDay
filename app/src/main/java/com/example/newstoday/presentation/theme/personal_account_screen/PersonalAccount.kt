@@ -3,6 +3,7 @@
 package com.example.newstoday.presentation.theme.personal_account_screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -80,16 +81,22 @@ fun PersonalAccountScreen(
     ) {
 
         Column(
-            modifier = Modifier.padding(start = 12.dp, top = 24.dp)
+            modifier = Modifier.fillMaxSize()
+                .background(Color.White)
         ) {
-            Spacer(Modifier.padding(start = 16.dp))
             Text(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp)
+                    .fillMaxWidth(),
                 text = "Profile",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(Modifier.padding(16.dp))
-            Row {
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp)
+                    .fillMaxWidth(),
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.cat_image),
                     contentDescription = "Иконка пользователя",
@@ -116,7 +123,8 @@ fun PersonalAccountScreen(
             }
             Spacer(modifier = Modifier.padding(30.dp))
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
+                    .padding(horizontal = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
