@@ -2,6 +2,7 @@
 
 package com.example.newstoday.presentation.theme.personal_account_screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -103,6 +104,7 @@ fun PersonalAccountScreen(
                     .padding(start = 16.dp, top = 16.dp)
                     .fillMaxWidth(),
             ) {
+
                 if (userData?.profilePictureUrl != null) {
                     AsyncImage(
                         model = userData.profilePictureUrl,
@@ -112,6 +114,7 @@ fun PersonalAccountScreen(
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
+                    Log.i("!!!", "AsyncImage ${userData.profilePictureUrl}")
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.cat_image),
