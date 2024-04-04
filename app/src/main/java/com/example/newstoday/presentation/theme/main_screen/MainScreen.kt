@@ -31,6 +31,7 @@ import com.example.newstoday.navigation.NavigationItem
 import com.example.newstoday.navigation.NavigationObject
 import com.example.newstoday.presentation.theme.auth.GoogleAuthUIClient
 import com.example.newstoday.presentation.theme.auth.SignInViewModel
+import com.example.newstoday.presentation.theme.Recommended_Screen.RecScreen
 import com.example.newstoday.presentation.theme.category_screen_first_entry.CategoryScreenFirstEntry
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryScreen
 import com.example.newstoday.presentation.theme.detail_news_screen.DetailsNewsScreen
@@ -145,7 +146,7 @@ fun Navigation(googleAuthUIClient: GoogleAuthUIClient, navController: NavHostCon
             }
         }
 
-        composable(NavigationObject.OnboardingScreen.route){
+        composable(NavigationObject.OnboardingScreen.route) {
             OnboardingScreen {
                 navController.navigate(NavigationObject.CategoryScreenFirstEntry.route)
             }
@@ -158,10 +159,15 @@ fun Navigation(googleAuthUIClient: GoogleAuthUIClient, navController: NavHostCon
         }
 
         composable(NavigationItem.Home.route) {
-            HomeScreen {
-                navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
+            HomeScreen(navigateToDetail = {
+                navController .currentBackStackEntry?.savedStateHandle?.set("dd", it)
                 navController.navigate(NavigationObject.DetailScreen.route)
-            }
+            },
+                navigateToDetail2 = {
+                    navController.currentBackStackEntry?.savedStateHandle?.set("qq", it)
+                    navController.navigate(NavigationObject.RecommendedScreen.route)
+                }
+            )
         }
 
         composable(NavigationItem.Category.route) {
@@ -201,9 +207,22 @@ fun Navigation(googleAuthUIClient: GoogleAuthUIClient, navController: NavHostCon
             val article =
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("dd")
                     ?: Article(Source("", ""), "", "", "", "", "", "", "")
-            DetailsNewsScreen(article){
-                navController.navigate(NavigationItem.Home.route)
+            DetailsNewsScreen(article) {
+                navController.popBackStack()
             }
         }
+        composable(NavigationObject.RecommendedScreen.route) {
+            val articles =
+                navController.previousBackStackEntry?.savedStateHandle?.get<List<Article>>("qq")
+            if (articles != null) {
+                RecScreen(articles){
+                    navController.currentBackStackEntry?.savedStateHandle?.set("dd", it)
+                    navController.navigate(NavigationObject.DetailScreen.route)
+
+                }
+            }
+
+        }
+
     }
 }

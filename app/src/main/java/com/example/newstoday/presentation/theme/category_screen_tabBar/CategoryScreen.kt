@@ -37,10 +37,12 @@ fun CategoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(Color.White),
     ) {
         Text(
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
+                .fillMaxWidth(),
             text = "Categories",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.SemiBold,
@@ -49,7 +51,8 @@ fun CategoryScreen(
         )
         Text(
             modifier = Modifier
-                .padding(vertical = 8.dp),
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
             text = "Thousands of articles in each category",
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Normal,
@@ -60,7 +63,7 @@ fun CategoryScreen(
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 8.dp),
+                .padding(horizontal = 16.dp),
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),

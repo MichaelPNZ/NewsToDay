@@ -17,7 +17,20 @@ import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    var selectedItem by remember { mutableIntStateOf(0) }
+    // Получаем текущий route из NavController
+    val currentRoute = navController.currentBackStackEntry?.destination?.route
+
+    // Определяем индекс текущего элемента в зависимости от текущего route
+    var selectedItem by remember { mutableIntStateOf(
+        when (currentRoute) {
+            NavigationItem.Home.route -> 0
+            NavigationItem.Category.route -> 1
+            NavigationItem.Favorite.route -> 2
+            NavigationItem.Account.route -> 3
+            else -> 0
+        }
+    )}
+
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Category,
@@ -38,15 +51,17 @@ fun BottomNavigationBar(navController: NavController) {
                     selectedTextColor = PurplePrimary
                 ),
                 onClick = {
-                    selectedItem = index
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
+                    if (selectedItem != index) {
+                        selectedItem = index
+                        navController.navigate(item.route) {
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
