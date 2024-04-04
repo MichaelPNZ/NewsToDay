@@ -22,6 +22,8 @@ retrofit = "2.9.0"
 room = "2.6.1"
 ksp = "1.9.22-1.0.17"
 navigationRuntimeKtx = "2.7.7"
+firebaseAuth = "22.3.1"
+playServicesAuth = "21.0.0"
 
 
 [libraries]
@@ -64,6 +66,8 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

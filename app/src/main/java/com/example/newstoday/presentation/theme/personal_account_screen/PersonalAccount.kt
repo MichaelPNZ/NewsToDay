@@ -2,6 +2,7 @@
 
 package com.example.newstoday.presentation.theme.personal_account_screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.example.newstoday.R
+import com.example.newstoday.presentation.theme.auth.UserData
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
 import com.example.newstoday.presentation.theme.ui.GreyDark
 import com.example.newstoday.presentation.theme.ui.GreyLighter
@@ -55,8 +58,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun PersonalAccountScreen(
     personalAccountViewModel: PersonalAccountViewModel = hiltViewModel(),
+    userData: UserData?,
+    onSignOutClick: () -> Unit,
     navigateToLanguageScreen: () ->Unit,
-    navigateToLoginScreen: ()->Unit) {
+    navigateToLoginScreen: ()->Unit
+) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     var bottomSheetText by remember { mutableStateOf("") }
@@ -92,33 +98,60 @@ fun PersonalAccountScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(Modifier.padding(16.dp))
             Row(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp)
                     .fillMaxWidth(),
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.cat_image),
-                    contentDescription = "Иконка пользователя",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(72.dp)
-                )
-                Column(
-                    modifier = Modifier.padding(12.dp)
-                ) {
-                    Text(
-                        text = viewModel.name,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = BlackPrimary
+
+                if (userData?.profilePictureUrl != null) {
+                    AsyncImage(
+                        model = userData.profilePictureUrl,
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(72.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
-                    Text(
-                        text = viewModel.email,
-                        fontSize = 14.sp,
-                        color = GreyPrimary
+                    Log.i("!!!", "AsyncImage ${userData.profilePictureUrl}")
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.cat_image),
+                        contentDescription = "Иконка пользователя",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(72.dp)
                     )
+                }
+                if (userData?.userName != null) {
+                    Column(
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Text(
+                            text = userData.userName,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BlackPrimary
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Text(
+                            text = viewModel.name,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BlackPrimary
+                        )
+                        Text(
+                            text = viewModel.email,
+                            fontSize = 14.sp,
+                            color = GreyPrimary
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.padding(30.dp))
@@ -145,6 +178,8 @@ fun PersonalAccountScreen(
                     ButtonGrayWithIcon(text = "Sign Out",
                         icon = Icons.Default.ExitToApp
                     ) {
+                        personalAccountViewModel.signOut()
+                        onSignOutClick()
                         navigateToLoginScreen()
                     }
                     Spacer(modifier = Modifier.padding(20.dp))
