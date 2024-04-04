@@ -31,7 +31,7 @@ class LoginScreenViewModel @Inject constructor(
         return suspendCoroutine { continuation ->
             viewModelScope.launch {
                 val user = getAllUsersUseCase()
-                val isUserExists = user.find { it.email == email && it.password == password } != null
+                val isUserExists = user.find { it.email == email} != null
                 continuation.resume(isUserExists)
             }
         }

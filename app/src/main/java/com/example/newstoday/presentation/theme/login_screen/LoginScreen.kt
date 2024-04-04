@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -134,7 +137,7 @@ fun Login(
     ) {
         OutlinedTextField(
             value = loginQuery,
-            onValueChange = {loginQuery = it },
+            onValueChange = { loginQuery = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -158,7 +161,7 @@ fun Login(
 
         OutlinedTextField(
             value = passwordQuery,
-            onValueChange = { passwordQuery = it},
+            onValueChange = { passwordQuery = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
@@ -230,7 +233,8 @@ fun Login(
             Image(
                 imageVector = ImageVector.vectorResource(id = R.drawable.google_icon),
                 contentDescription = null,
-                modifier = Modifier.wrapContentSize())
+                modifier = Modifier.wrapContentSize()
+            )
 
             Text(
                 modifier = Modifier.weight(1f),
@@ -270,7 +274,8 @@ fun Login(
     }
 
     if (showErrorDialog) {
-        MinimalDialog("The username or password\n" +
+        MinimalDialog(
+            "The username or password\n" +
                     " is entered incorrectly,\n" +
                     " or there is no such user"
         ) {
@@ -288,6 +293,9 @@ fun Register(
     var loginQuery by rememberSaveable { mutableStateOf("") }
     var passwordQuery by rememberSaveable { mutableStateOf("") }
     var showErrorDialog by remember { mutableStateOf(false) }
+    var isErrorName by rememberSaveable { mutableStateOf(false) }
+    var isErrorEmail by rememberSaveable { mutableStateOf(false) }
+    var isErrorPassword by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -298,18 +306,25 @@ fun Register(
     ) {
         OutlinedTextField(
             value = nameQuery,
-            onValueChange = { nameQuery = it},
+            onValueChange = { nameQuery = it
+                            isErrorName =false},
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Name", color = GreyPrimary) },
+            placeholder = { Text("Name e.g Misha", color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.person_icon), "",
                     tint = GreyPrimary
                 )
             },
+            trailingIcon = {
+                if (isErrorName)
+                    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
+
+            },
+            isError = isErrorName,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = GreyLighter,
                 unfocusedContainerColor = GreyLighter,
@@ -322,18 +337,27 @@ fun Register(
 
         OutlinedTextField(
             value = loginQuery,
-            onValueChange = { loginQuery = it},
+            onValueChange = {
+                loginQuery = it
+                isErrorEmail = false
+            },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Email", color = GreyPrimary) },
+            placeholder = { Text("Email e.g devrush@mail.ru ", color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.icons8_mailbox), "",
                     tint = GreyPrimary
                 )
             },
+            trailingIcon = {
+                if (isErrorEmail)
+                    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
+
+            },
+            isError = isErrorEmail,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = GreyLighter,
                 unfocusedContainerColor = GreyLighter,
@@ -346,18 +370,26 @@ fun Register(
 
         OutlinedTextField(
             value = passwordQuery,
-            onValueChange = { passwordQuery = it},
+            onValueChange = {
+                passwordQuery = it
+                isErrorPassword = false
+            },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Password", color = GreyPrimary) },
+            placeholder = { Text("Password, length min 6", color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.icons8_key), "",
                     tint = GreyPrimary
                 )
             },
+            trailingIcon = {
+                if (isErrorPassword)
+                    Icon(Icons.Filled.Info, "Error", tint = MaterialTheme.colorScheme.error)
+            },
+            isError = isErrorPassword,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = GreyLighter,
                 unfocusedContainerColor = GreyLighter,
@@ -376,7 +408,13 @@ fun Register(
             .padding(horizontal = 16.dp),
         onClick = {
             loginScreenViewModel.viewModelScope.launch {
-                if (!loginScreenViewModel.checkUser(loginQuery, passwordQuery)) {
+                if (isValidLogin(nameQuery)) {
+                    isErrorName = true
+                } else if (isValidEmail(loginQuery)) {
+                    isErrorEmail = true
+                } else if (isValidPassword(passwordQuery)) {
+                    isErrorPassword = true
+                } else if (!loginScreenViewModel.checkUser(loginQuery, passwordQuery)) {
                     loginScreenViewModel.saveUser(nameQuery, loginQuery, passwordQuery)
                     navigateToOnboarding()
                 } else {
@@ -399,12 +437,26 @@ fun Register(
     }
 
     if (showErrorDialog) {
-        MinimalDialog("Such a user already exists!"
+        MinimalDialog(
+            "Such a user already exists!"
         ) {
             showErrorDialog = false // Закрываем диалог при нажатии на кнопку
         }
     }
 }
+
+fun isValidPassword(text: String): Boolean {
+    return text.isEmpty() || text.length <= 6
+}
+
+fun isValidLogin(text: String): Boolean {
+    return text.isEmpty() || text.length <= 3
+}
+
+fun isValidEmail(text: String): Boolean {
+    return text.isEmpty()|| !text.contains("@").and(text.endsWith(".ru") || text.endsWith(".com"))
+}
+
 
 @Composable
 fun MinimalDialog(
@@ -421,7 +473,8 @@ fun MinimalDialog(
                 containerColor = GreyLighter,
                 contentColor = Pink40,
                 disabledContainerColor = GreyLighter,
-                disabledContentColor = Color.White),
+                disabledContentColor = Color.White
+            ),
             shape = RoundedCornerShape(16.dp),
         ) {
             Text(
