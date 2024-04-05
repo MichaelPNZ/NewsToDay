@@ -36,123 +36,83 @@ fun RecScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToDetail: (Article) -> Unit
 ) {
-
-    RecommendItem2(articles, viewModel, navigateToDetail)
-
-
-}
-
-@Composable
-fun RecommendItem2(
-    data: List<Article>?,
-    viewModel: HomeViewModel,
-    navigateToDetail: (Article) -> Unit
-) {
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
-        data?.let {
-            items(data) { item ->
-                if (item.urlToImage.isNotEmpty()) {
-                    RecommendItems(article = item, viewModel = viewModel) {
-
-                    }
-//                    Card(
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .padding(horizontal = 20.dp, vertical = 5.dp)
-//                            .clickable { navigateToDetail(item) },
-//                        colors = CardDefaults.cardColors(containerColor = Color.White)
-//                    ) {
-//                        Row(
-//                        ) {
-//                            AsyncImage(
-//                                item.urlToImage, "",
-//                                modifier = Modifier
-//                                    .size(96.dp, 96.dp)
-//                                    .clip(RoundedCornerShape(15.dp)),
-//                                contentScale = ContentScale.Crop,
-//                            )
-//                            Column(modifier = Modifier.padding(start = 15.dp)) {
-//                                Text(
-//                                    viewModel.category.value, fontSize = 14.sp,
-//                                    color = GreyPrimary,
-//                                    lineHeight = 20.sp,
-//                                )
-//                                Text(
-//                                    item.title + ".....",
-//                                    fontWeight = FontWeight.Bold,
-//                                    fontSize = 16.sp,
-//                                    lineHeight = 24.sp,
-//                                    maxLines = 3
-//                                )
-//                            }
-//                        }
-//                    }
+        items(articles) { item ->
+            if (item.urlToImage.isNotEmpty()) {
+                RecommendItemSquare(article = item, viewModel = viewModel) {
+                    navigateToDetail(it)
                 }
             }
         }
     }
-
 }
 
 @Composable
-fun RecommendItems(
+fun RecommendItemSquare(
     article: Article,
     viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
-            .aspectRatio(1f)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 10.dp),
-        shape = RoundedCornerShape(16.dp),
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
+            shape = RoundedCornerShape(16.dp),
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .background(Color.White, RoundedCornerShape(16.dp))
-                    .clickable {
-                        navigateToDetail(article)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .background(Color.White, RoundedCornerShape(16.dp))
+                        .clickable {
+                            navigateToDetail(article)
+                        },
+                    contentScale = ContentScale.Crop,
+                    model = article.urlToImage,
+                    contentDescription = null
+                )
+                IconButton(
+                    onClick = {
+                        viewModel.changeFavoriteStatus(article)
                     },
-                contentScale = ContentScale.Crop,
-                model = article.urlToImage,
-                contentDescription = null
-            )
-            IconButton(
-                onClick = {
-                    viewModel.changeFavoriteStatus(article)
-                },
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.favorite_icon), "favorites",
-                    tint = if (viewModel.isFavoriteCheck(article)) Color.Red else Color.White
-                )
-            }
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.favorite_icon), "favorites",
+                        tint = if (viewModel.isFavoriteCheck(article)) Color.Red else Color.White
+                    )
+                }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(25.dp)
-                    .align(Alignment.BottomStart),
-            ) {
-                Text(
-                    text = article.author,
-                    fontSize = 16.sp,
-                    color = Color.White,
-                    lineHeight = 24.sp,
-                )
-                Text(
-                    text = article.title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp)
+                        .align(Alignment.BottomStart),
+                ) {
+                    Text(
+                        text = article.author,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                        lineHeight = 24.sp,
+                    )
+                    Text(
+                        text = article.title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }

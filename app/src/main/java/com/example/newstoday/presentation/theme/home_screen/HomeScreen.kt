@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -248,7 +247,7 @@ fun HomeScreenContent(
                 if (data != null) {
                     recList = data
                 }
-                RecommendItem(data, viewModel, navigateToDetail)
+                RecommendItem(data, navigateToDetail)
             }
         }
     }
@@ -342,7 +341,6 @@ fun NewsItems(
 @Composable
 fun RecommendItem(
     data: List<Article>?,
-    viewModel: HomeViewModel,
     navigateToDetail: (Article) -> Unit
 ) {
     repeat(3) { item ->
@@ -363,7 +361,7 @@ fun RecommendItem(
                     )
                     Column(modifier = Modifier.padding(start = 15.dp)) {
                         Text(
-                            viewModel.category.value, fontSize = 14.sp,
+                            data[item].author, fontSize = 14.sp,
                             color = GreyPrimary,
                             lineHeight = 20.sp,
                         )
@@ -379,5 +377,4 @@ fun RecommendItem(
             }
         }
     }
-
 }

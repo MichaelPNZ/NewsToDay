@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.NewsToDay" parent="android:Theme.Material.Light.NoActionBar" >
-    <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/splash_screen_background</item>
     </style>
 </resources>
