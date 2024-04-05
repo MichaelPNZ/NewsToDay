@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NewsToDay</string>
     <string name="default_web_client_id">632919195196-10d20kkakii08u32v5mj3n4hlj62g24n.apps.googleusercontent.com</string>
+    <string name="lang">Language</string>
+    <string name="eng">English</string>
+    <string name="russ">Russian</string>
 </resources>

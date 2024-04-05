@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.appcompat)
     // viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     //Retrofit

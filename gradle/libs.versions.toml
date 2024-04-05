@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.1"
+appcompat = "1.6.1"
 coilCompose = "2.4.0"
 converterGson = "2.9.0"
 coreSplashscreen = "1.0.1"
@@ -28,6 +29,7 @@ playServicesAuth = "21.0.0"
 
 
 [libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
