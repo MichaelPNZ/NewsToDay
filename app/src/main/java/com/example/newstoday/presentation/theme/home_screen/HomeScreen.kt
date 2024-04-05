@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -105,7 +106,7 @@ fun HomeScreenContent(
             lineHeight = 32.sp
         )
         Text(
-            "Discover things of this world", color = GreyPrimary, fontSize = 16.sp,
+            stringResource(id = R.string.Discover_things_of_this_world), color = GreyPrimary, fontSize = 16.sp,
             modifier = Modifier.padding(top = 5.dp, start = 20.dp),
             lineHeight = 24.sp
         )
@@ -121,7 +122,7 @@ fun HomeScreenContent(
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp, top = 30.dp),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Search", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Search), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.baseline_search_24), "",
@@ -185,7 +186,7 @@ fun HomeScreenContent(
                         .height(256.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error")
+                    Text(text = stringResource(id = R.string.Error))
                 }
             }
 
@@ -199,7 +200,7 @@ fun HomeScreenContent(
         Spacer(modifier = Modifier.padding(20.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                "Recommended for you",
+                stringResource(id = R.string.Recommended_for_you),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 20.dp)
@@ -237,7 +238,7 @@ fun HomeScreenContent(
                         .height(256.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error")
+                    Text(text = stringResource(id = R.string.Error))
                 }
             }
 
