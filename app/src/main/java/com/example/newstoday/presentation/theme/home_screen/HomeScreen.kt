@@ -99,7 +99,7 @@ fun HomeScreenContent(
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            "Browse",
+            stringResource(id = R.string.Browse),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 72.dp, start = 20.dp),

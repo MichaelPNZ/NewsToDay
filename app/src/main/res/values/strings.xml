@@ -21,4 +21,10 @@
     <string name="Profile">Profile</string>
     <string name="Terms_Conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="Sign_Out">Sign Out</string>
+    <string name="Author">Author</string>
+    <string name="Results">Results</string>
+    <string name="Select_your_favorite_topics">Select your favorite topics</string>
+    <string name="Select_some">Select some of your favorite topics to let us suggest better news for you.</string>
+    <string name="Next">Next</string>
+    <string name="Browse">Browse</string>
 </resources>

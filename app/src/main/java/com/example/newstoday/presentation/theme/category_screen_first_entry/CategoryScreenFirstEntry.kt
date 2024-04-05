@@ -17,11 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newstoday.R
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryItem
 import com.example.newstoday.presentation.theme.category_screen_tabBar.CategoryViewModel
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
@@ -42,7 +44,7 @@ fun CategoryScreenFirstEntry(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp)
                 .fillMaxWidth(),
-            text = "Select your favorite topics",
+            text = stringResource(id = R.string.Select_your_favorite_topics),
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.SemiBold,
             color = BlackPrimary,
@@ -52,7 +54,7 @@ fun CategoryScreenFirstEntry(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-            text = "Select some of your favorite topics to let us suggest better news for you.",
+            text = stringResource(id = R.string.Select_some),
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Normal,
             color = GreyPrimary,
@@ -87,7 +89,7 @@ fun CategoryScreenFirstEntry(
                 disabledContainerColor = PurplePrimary,
                 disabledContentColor =Color.White)
         ) {
-            Text(text = "Next",
+            Text(text = stringResource(id = R.string.Next),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold)
         }

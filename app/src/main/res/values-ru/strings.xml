@@ -22,4 +22,10 @@
     <string name="Profile">Профиль</string>
     <string name="Terms_Conditions"><![CDATA[Условия и положения]]></string>
     <string name="Sign_Out">Выход</string>
+    <string name="Author">Автор</string>
+    <string name="Results">Результаты</string>
+    <string name="Select_your_favorite_topics">Выберите любимые темы</string>
+    <string name="Select_some">Выберите несколько ваших любимых тем, чтобы мы могли предложить вам лучшие новости.</string>
+    <string name="Next">Следующий</string>
+    <string name="Browse">Обзор</string>
 </resources>
