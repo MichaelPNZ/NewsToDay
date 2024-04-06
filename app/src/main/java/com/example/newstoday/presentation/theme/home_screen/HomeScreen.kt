@@ -2,6 +2,7 @@
 
 package com.example.newstoday.presentation.theme.home_screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -234,10 +235,13 @@ fun HomeScreenContent(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(256.dp),
+                        .height(256.dp)
+                        .padding(start = 20.dp, end = 20.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error")
+                    Image(painterResource(R.drawable.images),"",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize())
                 }
             }
 
