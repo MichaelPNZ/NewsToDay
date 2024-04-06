@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,20 +51,10 @@ fun OnboardingScreen(
         HorPage(state)
         DotsIndicator(totalDots = state.pageCount, selectedIndex = state.currentPage )
         Spacer(modifier = Modifier.padding(14.dp))
-        Text(text =
-            if(state.currentPage == 0){
-                firstText
-            }
-            else{
-                " "
-            }
-        ,
-            fontSize = 24.sp,)
-        Spacer(modifier = Modifier.padding(14.dp))
-        Text(text = allText,
+        Text(text = stringResource(id = R.string.All_news_in_one_place),
             fontSize = 16.sp,
             color = Color.Gray)
-        Spacer(modifier = Modifier.padding(30.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         if(state.currentPage == 2){
             Button(onClick = {
                 navigateToCategoryScreenFirstEntry()
@@ -77,7 +68,7 @@ fun OnboardingScreen(
                     disabledContainerColor = PurplePrimary,
                     disabledContentColor =Color.White)
                 ) {
-                Text(text = "Get Started",
+                Text(text = stringResource(id = R.string.Get_started),
                     modifier = Modifier.padding(vertical = 8.dp),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold)
@@ -93,14 +84,14 @@ fun HorPage(state: PagerState){
     HorizontalPager(state = state) { page ->
         Column(
         ) {
-            Spacer(modifier = Modifier.padding(60.dp))
+            Spacer(modifier = Modifier.padding(20.dp))
             Box(Modifier.fillMaxWidth(),contentAlignment = Alignment.TopCenter) {
                 Image(
                     painter = painterResource(id = images[page]),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(horizontal = 30.dp)
-                        .size(280.dp, 360.dp)
+                        .size(280.dp, 600.dp)
                         .clip(RoundedCornerShape(15.dp)),
                     contentScale = ContentScale.Crop
                 )
@@ -125,7 +116,7 @@ fun DotsIndicator(
             if (index == selectedIndex) {
                 Box(
                     modifier = Modifier
-                        .size(24.dp,10.dp)
+                        .size(24.dp, 10.dp)
                         .clip(CircleShape)
                         .background(color = PurplePrimary)
                 )
@@ -151,9 +142,7 @@ fun OnboardingScreenPreview(){
     OnboardingScreen {}
 }
 val images = listOf(
-    R.drawable.image_text,
-    R.drawable.image_text,
-    R.drawable.image_text
+    R.drawable.homepage,
+    R.drawable.bookmarks,
+    R.drawable.select_your_favorite_topics
 )
-const val firstText ="First to know"
-const val allText = "All news in one place, be\nthe first to know last news"

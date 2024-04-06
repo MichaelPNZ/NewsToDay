@@ -15,6 +15,8 @@
     <string name="Error">Ошибка</string>
     <string name="Recommended_for_you">Рекомендуем для вас</string>
     <string name="Login">Логин</string>
+    <string name="Name">Имя</string>
+    <string name="Email">Почта</string>
     <string name="Password">Пароль</string>
     <string name="Sign_in_with_Google">Войдите в систему с помощью Google</string>
     <string name="Dont_have_an_account">У вас нет аккаунта?</string>
@@ -29,4 +31,7 @@
     <string name="Next">Следующий</string>
     <string name="Browse">Обзор</string>
     <string name="Back_to_login">Вернуться на экран логина</string>
+    <string name="Get_started">Начать</string>
+    <string name="First_to_know">Познакомтесь с приложением</string>
+    <string name="All_news_in_one_place">Все новости в одном месте, будьте\nпервыми, кто узнает последние новости</string>
 </resources>

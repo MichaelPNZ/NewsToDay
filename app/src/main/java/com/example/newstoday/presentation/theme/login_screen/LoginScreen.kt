@@ -316,7 +316,7 @@ fun Register(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Name", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Name), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.person_icon), "",
@@ -357,7 +357,7 @@ fun Register(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Email ", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Email), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.icons8_mailbox), "",
@@ -397,7 +397,7 @@ fun Register(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Password", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Password), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.icons8_key), "",
