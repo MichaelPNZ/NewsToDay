@@ -28,4 +28,5 @@
     <string name="Select_some">Выберите несколько ваших любимых тем, чтобы мы могли предложить вам лучшие новости.</string>
     <string name="Next">Следующий</string>
     <string name="Browse">Обзор</string>
+    <string name="Back_to_login">Вернуться на экран логина</string>
 </resources>

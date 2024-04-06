@@ -27,4 +27,5 @@
     <string name="Select_some">Select some of your favorite topics to let us suggest better news for you.</string>
     <string name="Next">Next</string>
     <string name="Browse">Browse</string>
+    <string name="Back_to_login">Back to login</string>
 </resources>

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -115,7 +114,7 @@ fun LoginScreen(
             Register(
                 loginScreenViewModel = loginScreenViewModel,
                 navigateToOnboarding = navigateToOnboarding
-            )
+            ) { isLogin = true }
         }
     }
 }
@@ -289,7 +288,8 @@ fun Login(
 @Composable
 fun Register(
     loginScreenViewModel: LoginScreenViewModel,
-    navigateToOnboarding: () -> Unit
+    navigateToOnboarding: () -> Unit,
+    backToLoginClick: () -> Unit,
 ) {
     var nameQuery by rememberSaveable { mutableStateOf("") }
     var loginQuery by rememberSaveable { mutableStateOf("") }
@@ -459,6 +459,18 @@ fun Register(
             maxLines = 1
         )
     }
+    Spacer(modifier = Modifier.padding(15.dp))
+    Text(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { backToLoginClick() },
+        text = stringResource(id = R.string.Back_to_login),
+        color = Tomato,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        maxLines = 1
+    )
 
     if (showErrorDialog) {
         MinimalDialog(
@@ -474,7 +486,7 @@ fun isValidPassword(text: String): Boolean {
 }
 
 fun isValidLogin(text: String): Boolean {
-    return text.isEmpty() || text.length <= 3
+    return text.isEmpty() || text.length <= 2
 }
 
 fun isValidEmail(text: String): Boolean {
