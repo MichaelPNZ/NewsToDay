@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -143,7 +144,7 @@ fun Login(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Login", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Login), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.person_icon), "",
@@ -167,7 +168,7 @@ fun Login(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            placeholder = { Text("Password", color = GreyPrimary) },
+            placeholder = { Text(stringResource(id = R.string.Password), color = GreyPrimary) },
             leadingIcon = {
                 Icon(
                     painter = painterResource(R.drawable.icons8_key), "",
@@ -206,7 +207,7 @@ fun Login(
         colors = ButtonDefaults.buttonColors(PurplePrimary),
     ) {
         Text(
-            text = "Login",
+            text = stringResource(id = R.string.Login),
             color = Color.White,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
@@ -239,7 +240,7 @@ fun Login(
 
             Text(
                 modifier = Modifier.weight(1f),
-                text = "Sign in with Google",
+                text = stringResource(id = R.string.Sign_in_with_Google),
                 color = GreyLighter,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -256,7 +257,7 @@ fun Login(
         verticalAlignment = Alignment.Bottom,
     ) {
         Text(
-            text = "Don't have an account? ",
+            text = stringResource(id = R.string.Dont_have_an_account),
             color = GreyLighter,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
@@ -265,7 +266,7 @@ fun Login(
         )
         Text(
             modifier = Modifier.clickable { onCreateAccountClick() },
-            text = "Create here",
+            text = stringResource(id = R.string.Create_here),
             color = PurpleLight,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,

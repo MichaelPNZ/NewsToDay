@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewsToDay</string>
+    <string name="default_web_client_id">632919195196-10d20kkakii08u32v5mj3n4hlj62g24n.apps.googleusercontent.com</string>
+    <string name="lang">Язык</string>
+    <string name="eng">Английский</string>
+    <string name="russ">Русский</string>
+    <string name="Categories">Категории</string>
+    <string name="Thousands_of_articles_in_each_category">Тысячи статей в каждой категории</string>
+    <string name="Bookmarks">Закладки</string>
+    <string name="Saved_articles_to_the_library">Сохраненные статьи в библиотеке</string>
+    <string name="You_havent_saved_any_articles_yet_Start_reading_and_bookmarking_them_now">Вы еще не сохранили ни одной статьи. Начните читать и добавлять их в закладки прямо сейчас</string>
+    <string name="Discover_things_of_this_world">Познайте вещи этого мира</string>
+    <string name="Search">Поиск</string>
+    <string name="Error">Ошибка</string>
+    <string name="Recommended_for_you">Рекомендуем для вас</string>
+    <string name="Login">Логин</string>
+    <string name="Password">Пароль</string>
+    <string name="Sign_in_with_Google">Войдите в систему с помощью Google</string>
+    <string name="Dont_have_an_account">У вас нет аккаунта?</string>
+    <string name="Create_here">Создать здесь</string>
+    <string name="Profile">Профиль</string>
+    <string name="Terms_Conditions"><![CDATA[Условия и положения]]></string>
+    <string name="Sign_Out">Выход</string>
+    <string name="Author">Автор</string>
+    <string name="Results">Результаты</string>
+    <string name="Select_your_favorite_topics">Выберите любимые темы</string>
+    <string name="Select_some">Выберите несколько ваших любимых тем, чтобы мы могли предложить вам лучшие новости.</string>
+    <string name="Next">Следующий</string>
+    <string name="Browse">Обзор</string>
+</resources>

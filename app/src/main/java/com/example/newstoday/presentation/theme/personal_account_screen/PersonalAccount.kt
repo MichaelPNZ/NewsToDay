@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,7 +95,7 @@ fun PersonalAccountScreen(
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp)
                     .fillMaxWidth(),
-                text = "Profile",
+                text = stringResource(id = R.string.Profile),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -161,12 +162,12 @@ fun PersonalAccountScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                ButtonGrayWithIcon(text = "Language",
+                ButtonGrayWithIcon(text = stringResource(id = R.string.lang),
                     icon = Icons.Default.KeyboardArrowRight,
                     onClick = navigateToLanguageScreen)
                 Column {
                     ButtonGrayWithIcon(
-                        text = "Terms & Conditions",
+                        text = stringResource(id = R.string.Terms_Conditions),
                         icon = Icons.Default.KeyboardArrowRight,
                         onClick = {
                             bottomSheetText = termsText
@@ -175,7 +176,7 @@ fun PersonalAccountScreen(
                             }
                         }
                     )
-                    ButtonGrayWithIcon(text = "Sign Out",
+                    ButtonGrayWithIcon(text = stringResource(id = R.string.Sign_Out),
                         icon = Icons.Default.ExitToApp
                     ) {
                         personalAccountViewModel.signOut()

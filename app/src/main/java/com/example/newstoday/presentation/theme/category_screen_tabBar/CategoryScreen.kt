@@ -18,12 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.newstoday.R
 import com.example.newstoday.presentation.theme.ui.BlackPrimary
 import com.example.newstoday.presentation.theme.ui.GreyDark
 import com.example.newstoday.presentation.theme.ui.GreyLighter
@@ -43,7 +45,7 @@ fun CategoryScreen(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp)
                 .fillMaxWidth(),
-            text = "Categories",
+            text = stringResource(id = R.string.Categories),
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.SemiBold,
             color = BlackPrimary,
@@ -53,7 +55,7 @@ fun CategoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 16.dp, bottom = 16.dp),
-            text = "Thousands of articles in each category",
+            text = stringResource(id = R.string.Thousands_of_articles_in_each_category),
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Normal,
             color = GreyPrimary,

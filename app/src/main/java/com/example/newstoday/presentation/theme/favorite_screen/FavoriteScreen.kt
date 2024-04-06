@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,7 +55,7 @@ fun FavoriteScreen(
             .background(Color.White)
     ) {
         Text(
-            text = "Bookmarks", style = TextStyle(
+            text = stringResource(id = R.string.Bookmarks), style = TextStyle(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.W600,
                 lineHeight = 32.sp
@@ -64,7 +65,7 @@ fun FavoriteScreen(
                 .fillMaxWidth()
         )
         Text(
-            text = "Saved articles to the library", style = TextStyle(
+            text = stringResource(id = R.string.Saved_articles_to_the_library), style = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400,
                 lineHeight = 24.sp
@@ -177,7 +178,7 @@ fun NoNews() {
 
         )
         Text(
-            text = "You haven't saved any articles yet. Start reading and bookmarking them now",
+            text = stringResource(id = R.string.You_havent_saved_any_articles_yet_Start_reading_and_bookmarking_them_now),
             style = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W500,
