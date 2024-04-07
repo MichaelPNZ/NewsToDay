@@ -482,7 +482,7 @@ fun Register(
 }
 
 fun isValidPassword(text: String): Boolean {
-    return text.isEmpty() || text.length <= 6
+    return text.isEmpty() || text.length <= 5
 }
 
 fun isValidLogin(text: String): Boolean {

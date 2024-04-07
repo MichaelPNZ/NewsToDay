@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newstoday.R
+import com.example.newstoday.presentation.theme.ui.PurpleLighter
 import com.example.newstoday.presentation.theme.ui.PurplePrimary
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,7 +46,8 @@ fun OnboardingScreen(
 ) {
     val state = rememberPagerState(pageCount = { images.size })
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .background(PurpleLighter),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorPage(state)
